@@ -394,14 +394,17 @@ new Chart(document.getElementById('mfsbAnnualPieChart'),{type:'doughnut',data:{
       tooltip:{callbacks:{label:c=>`${c.label}: ฿${fmt(c.raw)}`}}}}});
 
 new Chart(document.getElementById('pofBarChart'),{type:'bar',data:{
-  labels:['เงินรับบริจาค','ดอกเบี้ยรับ','เงินบริจาค\n(จ่ายออก)','พิพิธภัณฑ์','ตกแต่ง\nแกะสลัก','แปลเอกสาร','สอบบัญชีฯ','อื่นๆ'],
-  datasets:[
-    {label:'รายรับ',data:[10030000,6741,0,0,0,0,0,0],backgroundColor:GREEN+'cc',borderColor:GREEN,borderWidth:1.5,borderRadius:4},
-    {label:'รายจ่าย',data:[0,0,2910748,103283,90000,42800,34000,585],backgroundColor:RED+'cc',borderColor:RED,borderWidth:1.5,borderRadius:4}
-  ]},options:{responsive:true,maintainAspectRatio:false,
-  plugins:{tooltip:{callbacks:{label:c=>c.raw>0?`฿${fmt(c.raw)}`:''}}},
+  labels:['รายรับรวม','รายจ่ายรวม','Net (กำไรสะสม)'],
+  datasets:[{
+    label:'จำนวน (฿)',
+    data:[10036741,3181416,6854650],
+    backgroundColor:[GREEN+'cc',RED+'cc',BLUE+'cc'],
+    borderColor:[GREEN,RED,BLUE],
+    borderWidth:1.5,borderRadius:6
+  }]},options:{responsive:true,maintainAspectRatio:false,
+  plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'฿'+fmt(c.raw)}}},
   scales:{y:{ticks:{callback:v=>'฿'+(v/1e6).toFixed(1)+'M'},grid:{color:'#f0f2f5'}},
-    x:{grid:{display:false},ticks:{font:{size:9}}}}}});
+    x:{grid:{display:false}}}}});
 
 new Chart(document.getElementById('pofDonationPie'),{type:'doughnut',data:{
   labels:['เงินบริจาค (จ่ายออก)','ค่าใช้จ่ายพิพิธภัณฑ์','ค่าตกแต่งแกะสลัก','ค่าแปลเอกสาร','ค่าสอบบัญชีฯ','อื่นๆ'],
