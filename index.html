@@ -153,14 +153,35 @@ tr:hover td{background:#fafbff}
 <!-- POF TAB -->
 <div id="tab-pof" class="page">
   <div class="cards">
-    <div class="card"><div class="label">ทุนเริ่มแรก (25 ส.ค. 2568)</div><div class="value">฿10,000,000</div><div class="sub">เงินทุนจัดตั้งมูลนิธิ</div></div>
-    <div class="card"><div class="label">รายรับรวม ปี 2568</div><div class="value pos">฿10,036,741</div><div class="sub">รับบริจาค + ดอกเบี้ย</div></div>
-    <div class="card"><div class="label">รายจ่ายรวม ปี 2568</div><div class="value neg">฿3,181,416</div><div class="sub">บริจาค + ค่าดำเนินการ</div></div>
-    <div class="card"><div class="label">Net (กำไรสะสม)</div><div class="value pos">฿+6,854,650</div><div class="sub">หลังภาษี ณ 31 ธ.ค. 2568</div></div>
+    <div class="card"><div class="label">ยอดยกมา 1 ม.ค. 2569</div><div class="value">฿16,820,052</div><div class="sub">เงินคงเหลือในบัญชี</div></div>
+    <div class="card"><div class="label">รายรับรวม H1/2569</div><div class="value pos">฿4,633,625</div><div class="sub">รับโอน ตปท. พ.ค.–มิ.ย.</div></div>
+    <div class="card"><div class="label">รายจ่ายรวม H1/2569</div><div class="value neg">฿4,628,956</div><div class="sub">ทำบุญบริจาค + ค่าดำเนินการ</div></div>
+    <div class="card"><div class="label">Net H1/2569</div><div class="value pos">฿+4,669</div><div class="sub">รายรับ ≈ รายจ่าย</div></div>
   </div>
 
   <div class="section">
-    <h2>รายรับ vs รายจ่าย ปี 2568 (25 ส.ค. – 31 ธ.ค. 2568)</h2>
+    <h2>รายรับ vs รายจ่าย รายเดือน 2569 (ม.ค.–มิ.ย.)</h2>
+    <div class="legend">
+      <span><span class="legend-dot" style="background:#27ae60"></span>รายรับ</span>
+      <span><span class="legend-dot" style="background:#e53935"></span>รายจ่าย</span>
+    </div>
+    <div class="chart-wrap"><canvas id="pofMonthlyBar"></canvas></div>
+    <p class="ann-label">* ม.ค.–เม.ย.: ไม่มีรายรับ (ทำบุญบริจาคอย่างเดียว) | พ.ค.–มิ.ย.: รับโอน ตปท.</p>
+  </div>
+
+  <div class="section">
+    <h2>ตารางสรุปรายเดือน 2569</h2>
+    <table>
+      <thead><tr><th>เดือน</th><th>รายรับ (฿)</th><th>รายจ่าย (฿)</th><th>Net Flow (฿)</th></tr></thead>
+      <tbody id="pofMonthlyTable"></tbody>
+      <tfoot><tr style="background:#f8f9fa;font-weight:700">
+        <td>รวม H1</td><td class="tpos">4,633,625</td><td class="tneg">-4,628,956</td><td class="tpos">+4,669</td>
+      </tr></tfoot>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>รายรับ vs รายจ่าย ปี 2568 (25 ส.ค. – 31 ธ.ค. 2568) — ประวัติ</h2>
     <div class="chart-wrap"><canvas id="pofBarChart"></canvas></div>
     <p class="ann-label">* งวดแรกของมูลนิธิ (จดทะเบียน 25 ส.ค. 2568) | เงินในธนาคาร ณ 31 ธ.ค. 2568: ฿16,850,052</p>
   </div>
@@ -171,7 +192,7 @@ tr:hover td{background:#fafbff}
       <div class="chart-wrap"><canvas id="pofDonationPie"></canvas></div>
     </div>
     <div class="section">
-      <h2>สรุปงบรายรับ-รายจ่าย</h2>
+      <h2>สรุปงบรายรับ-รายจ่าย ปี 2568</h2>
       <table>
         <thead><tr><th>รายการ</th><th style="text-align:right">จำนวน (บาท)</th></tr></thead>
         <tbody id="pofTable"></tbody>
@@ -244,9 +265,9 @@ tr:hover td{background:#fafbff}
 <div id="tab-summary" class="page">
   <div class="cards">
     <div class="card"><div class="label">MFSB – ยอดยกมา 2569</div><div class="value">฿24,548,205</div><div class="note">มูลนิธิ ธรรมทานกุศลจิต</div></div>
-    <div class="card"><div class="label">POF – ยอดเงิน 31 ธ.ค. 2568</div><div class="value">฿16,850,052</div><div class="note">มูลนิธิ ปิลันธน์โอวาท</div></div>
+    <div class="card"><div class="label">POF – ยอดยกมา 1 ม.ค. 2569</div><div class="value">฿16,820,052</div><div class="note">มูลนิธิ ปิลันธน์โอวาท</div></div>
     <div class="card"><div class="label">MFSB Net H1/2569</div><div class="value neg">฿-2,749,441</div><div class="note">รายจ่ายพิเศษ ก.พ.+พ.ค.</div></div>
-    <div class="card"><div class="label">POF Net ปี 2568</div><div class="value pos">฿+6,854,650</div><div class="note">งวดแรก 25 ส.ค.–31 ธ.ค. 2568</div></div>
+    <div class="card"><div class="label">POF Net H1/2569</div><div class="value pos">฿+4,669</div><div class="note">รายรับ ≈ รายจ่าย</div></div>
   </div>
 
   <div class="section">
@@ -281,7 +302,7 @@ tr:hover td{background:#fafbff}
       <thead><tr><th>Entity</th><th>ประเภท</th><th>ข้อมูลล่าสุด</th><th>รายรับ (฿)</th><th>รายจ่าย (฿)</th><th>Net (฿)</th></tr></thead>
       <tbody>
         <tr><td><strong>มูลนิธิ ธรรมทานกุศลจิต (MFSB)</strong></td><td>มูลนิธิ</td><td>H1/2569</td><td class="tpos">12,918,825</td><td class="tneg">15,668,266</td><td class="tneg">-2,749,441</td></tr>
-        <tr><td><strong>มูลนิธิ ปิลันธน์โอวาท (POF)</strong></td><td>มูลนิธิ</td><td>ปี 2568</td><td class="tpos">10,036,741</td><td class="tneg">3,181,416</td><td class="tpos">+6,854,650</td></tr>
+        <tr><td><strong>มูลนิธิ ปิลันธน์โอวาท (POF)</strong></td><td>มูลนิธิ</td><td>H1/2569</td><td class="tpos">4,633,625</td><td class="tneg">4,628,956</td><td class="tpos">+4,669</td></tr>
         <tr><td><strong>บจก.มัลติแอม (2010)</strong></td><td>บริษัท</td><td>ปี 2563</td><td class="tpos">5,274,300</td><td class="tneg">9,917,213</td><td class="tneg">-4,642,912</td></tr>
         <tr><td><strong>บจก.เว็ลธ์ แมเนจเมนท์ (WMA)</strong></td><td>บริษัท</td><td>ปี 2563</td><td>0</td><td class="tneg">840,192</td><td class="tneg">-840,192</td></tr>
         <tr><td><strong>ค่าใช้จ่ายดร.ชัยยุทธ</strong></td><td>ส่วนตัว</td><td>2568–2569</td><td>—</td><td class="tneg">450,726</td><td class="tneg">-450,726</td></tr>
@@ -323,6 +344,31 @@ const mfsbTbody=document.getElementById('mfsbTable');
     <td class="${n<0?'tneg':'tpos'}">${n<0?'-':'+'}${fmt(n)}</td>`;
   mfsbTbody.appendChild(r);
 });
+
+// POF 2026 monthly data (from POF-Revenue-Expense-2026.xlsx)
+const pofRev2026=[0,0,0,0,3095100,1538525];
+const pofExp2026=[3200,412300,1417938,338000,810000,1647518];
+const pofNet2026=[-3200,-412300,-1417938,-338000,2285100,-108993];
+
+// Populate POF 2026 monthly table
+const pofMonthlyTbody=document.getElementById('pofMonthlyTable');
+const mnFullTh=['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน'];
+[0,1,2,3,4,5].forEach(i=>{
+  const r=document.createElement('tr');
+  const n=pofNet2026[i];
+  r.innerHTML=`<td>${mnFullTh[i]} 2569</td>
+    <td class="${pofRev2026[i]>0?'tpos':''}">${pofRev2026[i]>0?fmt(pofRev2026[i]):'—'}</td>
+    <td class="tneg">-${fmt(pofExp2026[i])}</td>
+    <td class="${n>=0?'tpos':'tneg'}">${n>=0?'+':'-'}${fmt(n)}</td>`;
+  pofMonthlyTbody.appendChild(r);
+});
+
+new Chart(document.getElementById('pofMonthlyBar'),{type:'bar',data:{labels:months6,datasets:[
+  {label:'รายรับ',data:pofRev2026,backgroundColor:GREEN+'99',borderColor:GREEN,borderWidth:1.5,borderRadius:4},
+  {label:'รายจ่าย',data:pofExp2026,backgroundColor:RED+'99',borderColor:RED,borderWidth:1.5,borderRadius:4}
+]},options:{responsive:true,maintainAspectRatio:false,
+  plugins:{tooltip:{callbacks:{label:c=>'฿'+fmt(c.raw)}}},
+  scales:{y:{ticks:{callback:v=>'฿'+(v/1e6).toFixed(1)+'M'},grid:{color:'#f0f2f5'}},x:{grid:{display:false}}}}});
 
 // POF ปี 2568 (งวดแรก 25 ส.ค. – 31 ธ.ค. 2568) — จากงบการเงินตรวจสอบ ASM Audit
 const pofInc2568=10036741, pofExp2568=3181416, pofNet2568=6854650;
@@ -446,7 +492,7 @@ new Chart(document.getElementById('summaryCompare'),{type:'bar',data:{
   labels:['รายรับ','รายจ่าย','Net'],
   datasets:[
     {label:'MFSB (H1/2569)',data:[12918825,15668266,-2749441],backgroundColor:BLUE+'aa',borderColor:BLUE,borderWidth:1.5,borderRadius:4},
-    {label:'POF (ปี 2568)',data:[10036741,3181416,6854650],backgroundColor:TEAL+'aa',borderColor:TEAL,borderWidth:1.5,borderRadius:4}
+    {label:'POF (H1/2569)',data:[4633625,4628956,4669],backgroundColor:TEAL+'aa',borderColor:TEAL,borderWidth:1.5,borderRadius:4}
   ]},options:{responsive:true,maintainAspectRatio:false,
   plugins:{tooltip:{callbacks:{label:c=>(c.raw<0?'-':'+')+'฿'+fmt(c.raw)}}},
   scales:{y:{ticks:{callback:v=>'฿'+(v/1e6).toFixed(1)+'M'},grid:{color:'#f0f2f5'}},x:{grid:{display:false}}}}});
