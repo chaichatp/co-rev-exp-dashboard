@@ -28,6 +28,8 @@ header .sub{font-size:.85rem;opacity:.75;margin-top:4px}
 .card .note{font-size:.72rem;color:#aaa;margin-top:3px}
 .section{background:#fff;border-radius:10px;padding:20px 22px;box-shadow:0 1px 4px rgba(0,0,0,.08);margin-bottom:22px}
 .section h2{font-size:1rem;font-weight:700;color:#1a2f55;margin-bottom:16px;padding-bottom:10px;border-bottom:2px solid #f0f2f5}
+.hist-header{font-size:.95rem;font-weight:700;color:#555;margin:24px 0 14px;padding-bottom:8px;border-bottom:2px solid #e8eaed;display:flex;align-items:center;gap:8px}
+.hist-header::before{content:'📅';font-size:.85rem}
 .chart-wrap{position:relative;height:310px}
 .two-col{display:grid;grid-template-columns:1fr 1fr;gap:18px}
 @media(max-width:780px){.two-col{grid-template-columns:1fr}}
@@ -83,70 +85,59 @@ tr:hover td{background:#fafbff}
 <div id="tab-mfsb" class="page active">
   <div class="cards">
     <div class="card"><div class="label">ยอดยกมา 1 ม.ค. 2569</div><div class="value">฿24,548,205</div><div class="sub">เงินคงเหลือในบัญชี</div></div>
-    <div class="card"><div class="label">รายรับรวม H1/2569</div><div class="value pos">฿12,918,825</div><div class="sub">รับโอน ตปท. ม.ค.–มิ.ย.</div></div>
-    <div class="card"><div class="label">Net Flow H1/2569</div><div class="value neg">฿-2,749,441</div><div class="sub">รวมรายจ่ายประจำปี+เดือน</div></div>
-    <div class="card"><div class="label">รายรับ ตปท. เฉลี่ย/เดือน</div><div class="value">฿2,153,138</div><div class="sub">จาก 6 เดือน</div></div>
+    <div class="card"><div class="label">รายรับรวม H1/2569</div><div class="value pos">฿13,080,171</div><div class="sub">ม.ค.–มิ.ย. 2569</div></div>
+    <div class="card"><div class="label">รายจ่ายรวม H1/2569</div><div class="value neg">฿19,066,099</div><div class="sub">ทุกหมวดรายจ่าย</div></div>
+    <div class="card"><div class="label">Net H1/2569</div><div class="value neg">฿-5,985,928</div><div class="sub">รายจ่ายพิเศษ ก.พ.+พ.ค.</div></div>
   </div>
 
   <div class="section">
-    <h2>Net Cash Flow รายเดือน 2569 (ม.ค.–มิ.ย.)</h2>
+    <h2>รายรับ vs รายจ่าย รายเดือน 2569 (ม.ค.–มิ.ย.)</h2>
     <div class="legend">
-      <span><span class="legend-dot" style="background:#27ae60"></span>รายรับเกินรายจ่าย</span>
-      <span><span class="legend-dot" style="background:#e53935"></span>รายจ่ายเกินรายรับ</span>
+      <span><span class="legend-dot" style="background:#27ae60"></span>รายรับ</span>
+      <span><span class="legend-dot" style="background:#e53935"></span>รายจ่าย</span>
     </div>
-    <div class="chart-wrap"><canvas id="mfsbNetChart"></canvas></div>
-    <p class="ann-label">* ก.พ. 2569: ชำระเงินค้าง ELT ฿5,243,656 &nbsp;|&nbsp; พ.ค. 2569: ทำบุญบริจาคก้อนใหญ่</p>
-  </div>
-
-  <div class="two-col">
-    <div class="section">
-      <h2>รายรับ vs รายจ่าย รายเดือน 2569</h2>
-      <div class="chart-wrap"><canvas id="mfsbBarChart"></canvas></div>
-    </div>
-    <div class="section">
-      <h2>Net Flow ทั้งปี 2568 (ม.ค.–ธ.ค.)</h2>
-      <div class="chart-wrap"><canvas id="mfsb2025Chart"></canvas></div>
-      <p class="ann-label">* ธ.ค.2568: ส่งคืนเงินเดือน WMA+MAM ฿1.35M + ทำบุญก้อนใหญ่</p>
-    </div>
+    <div class="chart-wrap"><canvas id="mfsbBarChart2026"></canvas></div>
+    <p class="ann-label">* ก.พ. 2569: ชำระเงินค้าง ELT ฿5.24M + ค่าใช้จ่ายพิเศษ &nbsp;|&nbsp; พ.ค. 2569: ทำบุญบริจาคก้อนใหญ่</p>
   </div>
 
   <div class="section">
     <h2>ตารางสรุปรายเดือน 2569</h2>
     <table>
-      <thead><tr>
-        <th>เดือน</th><th>รับโอน ตปท. (฿)</th><th>Net ค่าใช้จ่ายประจำเดือน (฿)</th><th>ค่าใช้จ่ายประจำปี (฿)</th><th>Net Flow รวม (฿)</th>
-      </tr></thead>
-      <tbody id="mfsbTable"></tbody>
+      <thead><tr><th>เดือน</th><th>รายรับ (฿)</th><th>รายจ่าย (฿)</th><th>Net Flow (฿)</th></tr></thead>
+      <tbody id="mfsbTable2026"></tbody>
       <tfoot><tr style="background:#f8f9fa;font-weight:700">
-        <td>รวม H1</td>
-        <td class="tpos">12,918,825</td>
-        <td class="tneg">-8,416,077</td>
-        <td class="tneg">-6,036,878</td>
-        <td class="tneg">-2,749,441</td>
+        <td>รวม H1/2569</td>
+        <td class="tpos">13,080,171</td>
+        <td class="tneg">-19,066,099</td>
+        <td class="tneg">-5,985,928</td>
       </tr></tfoot>
     </table>
   </div>
 
+  <div class="hist-header">ข้อมูลประวัติ ปี 2568</div>
+
   <div class="section">
-    <h2>หมวดค่าใช้จ่ายประจำปี H1/2569</h2>
-    <div class="two-col">
-      <div class="chart-wrap"><canvas id="mfsbAnnualPieChart"></canvas></div>
-      <table style="align-self:start;margin-top:10px">
-        <thead><tr><th>รายการ</th><th>จำนวน (฿)</th></tr></thead>
-        <tbody>
-          <tr><td>เงินค้างชำระ ELT</td><td class="tneg">5,243,656</td></tr>
-          <tr><td>ค่าบริการบำรุงรักษาระบบ/โดเมน</td><td class="tneg">267,259</td></tr>
-          <tr><td>ค่าที่ปรึกษา</td><td class="tneg">200,000</td></tr>
-          <tr><td>ค่าบริการสอบบัญชี</td><td class="tneg">72,750</td></tr>
-          <tr><td>ภาษีที่ดินและสิ่งปลูกสร้าง</td><td class="tneg">39,690</td></tr>
-          <tr><td>ค่าบริการดูแลรักษาลิฟท์</td><td class="tneg">30,888</td></tr>
-          <tr><td>ค่าบริการกำจัดปลวก/แมลง</td><td class="tneg">27,040</td></tr>
-          <tr><td>ภาษีเงินได้มูลนิธิ (ภงด.55)</td><td class="tneg">18,905</td></tr>
-          <tr><td>ค่าโปรแกรมบัญชี PEAK</td><td class="tneg">5,200</td></tr>
-          <tr style="font-weight:700"><td>รวม</td><td class="tneg">6,036,878</td></tr>
-        </tbody>
-      </table>
+    <h2>รายรับ vs รายจ่าย ทั้งปี 2568 (ม.ค.–ธ.ค.) — ประวัติ</h2>
+    <div class="legend">
+      <span><span class="legend-dot" style="background:#27ae60"></span>รายรับ</span>
+      <span><span class="legend-dot" style="background:#e53935"></span>รายจ่าย</span>
     </div>
+    <div class="chart-wrap"><canvas id="mfsbBarChart2025"></canvas></div>
+    <p class="ann-label">* เม.ย. 2568: รับโอน ตปท. ก้อนใหญ่ + จ่ายออกก้อนใหญ่ &nbsp;|&nbsp; ธ.ค. 2568: ทำบุญบริจาคออก ฿10M+ (โอนให้ POF)</p>
+  </div>
+
+  <div class="section">
+    <h2>ตารางสรุปรายเดือน 2568</h2>
+    <table>
+      <thead><tr><th>เดือน</th><th>รายรับ (฿)</th><th>รายจ่าย (฿)</th><th>Net Flow (฿)</th></tr></thead>
+      <tbody id="mfsbTable2025"></tbody>
+      <tfoot><tr style="background:#f8f9fa;font-weight:700">
+        <td>รวมปี 2568</td>
+        <td class="tpos">37,305,572</td>
+        <td class="tneg">-58,327,934</td>
+        <td class="tneg">-21,022,362</td>
+      </tr></tfoot>
+    </table>
   </div>
 </div>
 
@@ -166,7 +157,7 @@ tr:hover td{background:#fafbff}
       <span><span class="legend-dot" style="background:#e53935"></span>รายจ่าย</span>
     </div>
     <div class="chart-wrap"><canvas id="pofMonthlyBar"></canvas></div>
-    <p class="ann-label">* ม.ค.–เม.ย.: ไม่มีรายรับ (ทำบุญบริจาคอย่างเดียว) | พ.ค.–มิ.ย.: รับโอน ตปท.</p>
+    <p class="ann-label">* ม.ค.–เม.ย.: ไม่มีรายรับ (ทำบุญบริจาคอย่างเดียว) &nbsp;|&nbsp; พ.ค.–มิ.ย.: รับโอน ตปท.</p>
   </div>
 
   <div class="section">
@@ -175,15 +166,39 @@ tr:hover td{background:#fafbff}
       <thead><tr><th>เดือน</th><th>รายรับ (฿)</th><th>รายจ่าย (฿)</th><th>Net Flow (฿)</th></tr></thead>
       <tbody id="pofMonthlyTable"></tbody>
       <tfoot><tr style="background:#f8f9fa;font-weight:700">
-        <td>รวม H1</td><td class="tpos">4,633,625</td><td class="tneg">-4,628,956</td><td class="tpos">+4,669</td>
+        <td>รวม H1/2569</td><td class="tpos">4,633,625</td><td class="tneg">-4,628,956</td><td class="tpos">+4,669</td>
       </tr></tfoot>
     </table>
   </div>
 
+  <div class="hist-header">ข้อมูลประวัติ ปี 2568</div>
+
   <div class="section">
-    <h2>รายรับ vs รายจ่าย ปี 2568 (25 ส.ค. – 31 ธ.ค. 2568) — ประวัติ</h2>
+    <h2>รายรับ vs รายจ่าย รายเดือน 2568 (ต.ค.–ธ.ค.) — ประวัติ</h2>
+    <div class="legend">
+      <span><span class="legend-dot" style="background:#27ae60"></span>รายรับ</span>
+      <span><span class="legend-dot" style="background:#e53935"></span>รายจ่าย</span>
+    </div>
+    <div class="chart-wrap"><canvas id="pofBarChart2025"></canvas></div>
+    <p class="ann-label">* มูลนิธิจดทะเบียน 25 ส.ค. 2568 &nbsp;|&nbsp; ต.ค.–พ.ย.: ไม่มีรายรับ &nbsp;|&nbsp; ธ.ค.: รับทุนแรก ฿10M จาก MFSB</p>
+  </div>
+
+  <div class="section">
+    <h2>ตารางสรุปรายเดือน 2568 (ต.ค.–ธ.ค.)</h2>
+    <table>
+      <thead><tr><th>เดือน</th><th>รายรับ (฿)</th><th>รายจ่าย (฿)</th><th>Net Flow (฿)</th></tr></thead>
+      <tbody id="pofMonthlyTable2025"></tbody>
+      <tfoot><tr style="background:#f8f9fa;font-weight:700">
+        <td>รวมปี 2568 (ต.ค.–ธ.ค.)</td><td class="tpos">10,000,000</td><td class="tneg">-3,185,835</td><td class="tpos">+6,814,165</td>
+      </tr></tfoot>
+    </table>
+    <p class="ann-label">* หมายเหตุ: งบตรวจสอบ (ASM Audit) บันทึกรายรับ ฿10,036,741 (รวมดอกเบี้ย ฿6,741) และรายจ่าย ฿3,181,416</p>
+  </div>
+
+  <div class="section">
+    <h2>รายรับ vs รายจ่าย ปี 2568 (ภาพรวม) — งบตรวจสอบ</h2>
     <div class="chart-wrap"><canvas id="pofBarChart"></canvas></div>
-    <p class="ann-label">* งวดแรกของมูลนิธิ (จดทะเบียน 25 ส.ค. 2568) | เงินในธนาคาร ณ 31 ธ.ค. 2568: ฿16,850,052</p>
+    <p class="ann-label">* งวดแรกของมูลนิธิ (จดทะเบียน 25 ส.ค. 2568) &nbsp;|&nbsp; เงินในธนาคาร ณ 31 ธ.ค. 2568: ฿16,850,052</p>
   </div>
 
   <div class="two-col">
@@ -266,18 +281,18 @@ tr:hover td{background:#fafbff}
   <div class="cards">
     <div class="card"><div class="label">MFSB – ยอดยกมา 2569</div><div class="value">฿24,548,205</div><div class="note">มูลนิธิ ธรรมทานกุศลจิต</div></div>
     <div class="card"><div class="label">POF – ยอดยกมา 1 ม.ค. 2569</div><div class="value">฿16,820,052</div><div class="note">มูลนิธิ ปิลันธน์โอวาท</div></div>
-    <div class="card"><div class="label">MFSB Net H1/2569</div><div class="value neg">฿-2,749,441</div><div class="note">รายจ่ายพิเศษ ก.พ.+พ.ค.</div></div>
+    <div class="card"><div class="label">MFSB Net H1/2569</div><div class="value neg">฿-5,985,928</div><div class="note">รายจ่ายพิเศษ ก.พ.+พ.ค.</div></div>
     <div class="card"><div class="label">POF Net H1/2569</div><div class="value pos">฿+4,669</div><div class="note">รายรับ ≈ รายจ่าย</div></div>
   </div>
 
   <div class="section">
-    <h2>เปรียบเทียบ MFSB (H1/2569) vs POF (ปี 2568) — รายรับ / รายจ่าย / Net</h2>
+    <h2>เปรียบเทียบ MFSB vs POF — H1/2569 รายรับ / รายจ่าย / Net</h2>
     <div class="chart-wrap"><canvas id="summaryCompare"></canvas></div>
   </div>
 
   <div class="two-col">
     <div class="section">
-      <h2>MFSB รายรับ ตปท. รายเดือน H1/2569</h2>
+      <h2>MFSB รายรับรายเดือน H1/2569</h2>
       <div class="chart-wrap"><canvas id="sumIncomeBar"></canvas></div>
     </div>
     <div class="section">
@@ -301,7 +316,7 @@ tr:hover td{background:#fafbff}
     <table>
       <thead><tr><th>Entity</th><th>ประเภท</th><th>ข้อมูลล่าสุด</th><th>รายรับ (฿)</th><th>รายจ่าย (฿)</th><th>Net (฿)</th></tr></thead>
       <tbody>
-        <tr><td><strong>มูลนิธิ ธรรมทานกุศลจิต (MFSB)</strong></td><td>มูลนิธิ</td><td>H1/2569</td><td class="tpos">12,918,825</td><td class="tneg">15,668,266</td><td class="tneg">-2,749,441</td></tr>
+        <tr><td><strong>มูลนิธิ ธรรมทานกุศลจิต (MFSB)</strong></td><td>มูลนิธิ</td><td>H1/2569</td><td class="tpos">13,080,171</td><td class="tneg">19,066,099</td><td class="tneg">-5,985,928</td></tr>
         <tr><td><strong>มูลนิธิ ปิลันธน์โอวาท (POF)</strong></td><td>มูลนิธิ</td><td>H1/2569</td><td class="tpos">4,633,625</td><td class="tneg">4,628,956</td><td class="tpos">+4,669</td></tr>
         <tr><td><strong>บจก.มัลติแอม (2010)</strong></td><td>บริษัท</td><td>ปี 2563</td><td class="tpos">5,274,300</td><td class="tneg">9,917,213</td><td class="tneg">-4,642,912</td></tr>
         <tr><td><strong>บจก.เว็ลธ์ แมเนจเมนท์ (WMA)</strong></td><td>บริษัท</td><td>ปี 2563</td><td>0</td><td class="tneg">840,192</td><td class="tneg">-840,192</td></tr>
@@ -321,57 +336,118 @@ function switchTab(name){
 
 const fmt=n=>Math.abs(n).toLocaleString('th-TH',{maximumFractionDigits:0});
 const GREEN='#27ae60',RED='#e53935',BLUE='#2e5a9c',GOLD='#f0a500',TEAL='#00897b';
+const chartOpts=(yUnit='M')=>({responsive:true,maintainAspectRatio:false,
+  plugins:{tooltip:{callbacks:{label:c=>'฿'+fmt(c.raw)}}},
+  scales:{y:{ticks:{callback:v=>'฿'+(v/1e6).toFixed(1)+yUnit},grid:{color:'#f0f2f5'}},x:{grid:{display:false}}}});
 
-// MFSB 2026
 const months6=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.'];
-const mfsbTpat=[2110050,2115450,2118150,2184975,2200500,2189700];
-const mfsbMonthly=[1519845,1580372,1332769,1526679,-3978801,1306572];
-const mfsbAnnualExp=[-131489,-5443656,-72750,-44890,0,-344092];
-const mfsbNet=[1388356,-3863284,1260019,1481789,-3978801,962480];
-const mfsbIncome=mfsbTpat.map(v=>v+21900);
-const mfsbExpense=mfsbIncome.map((inc,i)=>inc-mfsbNet[i]);
+const months12=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+const mnFullTh=['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
 
-// Populate MFSB table
-const mnFull=['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน'];
-const mfsbTbody=document.getElementById('mfsbTable');
+// ─── MFSB 2026 (Jan–Jun, from RECORD) ───
+const mfsbRev2026=[2141916,2137112,2140229,2216803,2232356,2211755];
+const mfsbExp2026=[1995779,6381257,1236044,1120584,6672281,1660154];
+const mfsbNet2026=[146137,-4244144,904184,1096219,-4439925,551601];
+
+// Populate MFSB 2026 table
+const mfsb26Tbody=document.getElementById('mfsbTable2026');
 [0,1,2,3,4,5].forEach(i=>{
-  const n=mfsbNet[i],m=mfsbMonthly[i],a=mfsbAnnualExp[i];
+  const n=mfsbNet2026[i];
   const r=document.createElement('tr');
-  r.innerHTML=`<td>${mnFull[i]} 2569</td>
-    <td class="tpos">${fmt(mfsbTpat[i])}</td>
-    <td class="${m<0?'tneg':'tpos'}">${m<0?'-':'+'}${fmt(m)}</td>
-    <td class="${a<0?'tneg':''}">${a<0?'-'+fmt(a):'—'}</td>
-    <td class="${n<0?'tneg':'tpos'}">${n<0?'-':'+'}${fmt(n)}</td>`;
-  mfsbTbody.appendChild(r);
+  r.innerHTML=`<td>${mnFullTh[i]} 2569</td>
+    <td class="${mfsbRev2026[i]>0?'tpos':''}">${mfsbRev2026[i]>0?fmt(mfsbRev2026[i]):'—'}</td>
+    <td class="tneg">-${fmt(mfsbExp2026[i])}</td>
+    <td class="${n>=0?'tpos':'tneg'}">${n>=0?'+':'-'}${fmt(n)}</td>`;
+  mfsb26Tbody.appendChild(r);
 });
 
-// POF 2026 monthly data (from POF-Revenue-Expense-2026.xlsx)
+new Chart(document.getElementById('mfsbBarChart2026'),{type:'bar',data:{labels:months6,datasets:[
+  {label:'รายรับ',data:mfsbRev2026,backgroundColor:GREEN+'99',borderColor:GREEN,borderWidth:1.5,borderRadius:4},
+  {label:'รายจ่าย',data:mfsbExp2026,backgroundColor:RED+'99',borderColor:RED,borderWidth:1.5,borderRadius:4}
+]},options:chartOpts()});
+
+// ─── MFSB 2025 (Jan–Dec, from RECORD) ───
+const mfsbRev2025=[2325925,2296350,0,9278300,2246400,2221712,2223905,2283722,2159098,2207471,7879594,2183095];
+const mfsbExp2025=[156000,320000,538000,10651000,5208490,3232060,2931017,3187491,3521539,5769249,8943136,13869952];
+const mfsbNet2025=[2169925,1976350,-538000,-1372700,-2962090,-1010347,-707112,-903770,-1362441,-3561778,-1063542,-11686856];
+
+// Populate MFSB 2025 table
+const mfsb25Tbody=document.getElementById('mfsbTable2025');
+[0,1,2,3,4,5,6,7,8,9,10,11].forEach(i=>{
+  const n=mfsbNet2025[i];
+  const r=document.createElement('tr');
+  r.innerHTML=`<td>${mnFullTh[i]} 2568</td>
+    <td class="${mfsbRev2025[i]>0?'tpos':''}">${mfsbRev2025[i]>0?fmt(mfsbRev2025[i]):'—'}</td>
+    <td class="tneg">-${fmt(mfsbExp2025[i])}</td>
+    <td class="${n>=0?'tpos':'tneg'}">${n>=0?'+':'-'}${fmt(n)}</td>`;
+  mfsb25Tbody.appendChild(r);
+});
+
+new Chart(document.getElementById('mfsbBarChart2025'),{type:'bar',data:{labels:months12,datasets:[
+  {label:'รายรับ',data:mfsbRev2025,backgroundColor:GREEN+'99',borderColor:GREEN,borderWidth:1.5,borderRadius:4},
+  {label:'รายจ่าย',data:mfsbExp2025,backgroundColor:RED+'99',borderColor:RED,borderWidth:1.5,borderRadius:4}
+]},options:{responsive:true,maintainAspectRatio:false,
+  plugins:{tooltip:{callbacks:{label:c=>'฿'+fmt(c.raw)}}},
+  scales:{y:{ticks:{callback:v=>'฿'+(v/1e6).toFixed(1)+'M'},grid:{color:'#f0f2f5'}},
+    x:{grid:{display:false},ticks:{font:{size:10}}}}}});
+
+// ─── POF 2026 (Jan–Jun, from RECORD) ───
 const pofRev2026=[0,0,0,0,3095100,1538525];
 const pofExp2026=[3200,412300,1417938,338000,810000,1647518];
 const pofNet2026=[-3200,-412300,-1417938,-338000,2285100,-108993];
 
-// Populate POF 2026 monthly table
-const pofMonthlyTbody=document.getElementById('pofMonthlyTable');
-const mnFullTh=['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน'];
+const pof26Tbody=document.getElementById('pofMonthlyTable');
 [0,1,2,3,4,5].forEach(i=>{
-  const r=document.createElement('tr');
   const n=pofNet2026[i];
+  const r=document.createElement('tr');
   r.innerHTML=`<td>${mnFullTh[i]} 2569</td>
     <td class="${pofRev2026[i]>0?'tpos':''}">${pofRev2026[i]>0?fmt(pofRev2026[i]):'—'}</td>
     <td class="tneg">-${fmt(pofExp2026[i])}</td>
     <td class="${n>=0?'tpos':'tneg'}">${n>=0?'+':'-'}${fmt(n)}</td>`;
-  pofMonthlyTbody.appendChild(r);
+  pof26Tbody.appendChild(r);
 });
 
 new Chart(document.getElementById('pofMonthlyBar'),{type:'bar',data:{labels:months6,datasets:[
   {label:'รายรับ',data:pofRev2026,backgroundColor:GREEN+'99',borderColor:GREEN,borderWidth:1.5,borderRadius:4},
   {label:'รายจ่าย',data:pofExp2026,backgroundColor:RED+'99',borderColor:RED,borderWidth:1.5,borderRadius:4}
-]},options:{responsive:true,maintainAspectRatio:false,
-  plugins:{tooltip:{callbacks:{label:c=>'฿'+fmt(c.raw)}}},
-  scales:{y:{ticks:{callback:v=>'฿'+(v/1e6).toFixed(1)+'M'},grid:{color:'#f0f2f5'}},x:{grid:{display:false}}}}});
+]},options:chartOpts()});
 
-// POF ปี 2568 (งวดแรก 25 ส.ค. – 31 ธ.ค. 2568) — จากงบการเงินตรวจสอบ ASM Audit
-const pofInc2568=10036741, pofExp2568=3181416, pofNet2568=6854650;
+// ─── POF 2025 (Oct–Dec, from RECORD) ───
+const pofRev2025=[0,0,10000000];
+const pofExp2025=[899646,602246,1683943];
+const pofNet2025=[-899646,-602246,8316057];
+const monthsPof2025=['ต.ค.','พ.ย.','ธ.ค.'];
+const mnFullPof2025=['ตุลาคม','พฤศจิกายน','ธันวาคม'];
+
+const pof25Tbody=document.getElementById('pofMonthlyTable2025');
+[0,1,2].forEach(i=>{
+  const n=pofNet2025[i];
+  const r=document.createElement('tr');
+  r.innerHTML=`<td>${mnFullPof2025[i]} 2568</td>
+    <td class="${pofRev2025[i]>0?'tpos':''}">${pofRev2025[i]>0?fmt(pofRev2025[i]):'—'}</td>
+    <td class="tneg">-${fmt(pofExp2025[i])}</td>
+    <td class="${n>=0?'tpos':'tneg'}">${n>=0?'+':'-'}${fmt(n)}</td>`;
+  pof25Tbody.appendChild(r);
+});
+
+new Chart(document.getElementById('pofBarChart2025'),{type:'bar',data:{labels:monthsPof2025,datasets:[
+  {label:'รายรับ',data:pofRev2025,backgroundColor:GREEN+'99',borderColor:GREEN,borderWidth:1.5,borderRadius:4},
+  {label:'รายจ่าย',data:pofExp2025,backgroundColor:RED+'99',borderColor:RED,borderWidth:1.5,borderRadius:4}
+]},options:chartOpts()});
+
+// ─── POF 2568 Annual (Audited) ───
+new Chart(document.getElementById('pofBarChart'),{type:'bar',data:{
+  labels:['รายรับรวม','รายจ่ายรวม','Net (กำไรสะสม)'],
+  datasets:[{
+    label:'จำนวน (฿)',
+    data:[10036741,3181416,6854650],
+    backgroundColor:[GREEN+'cc',RED+'cc',BLUE+'cc'],
+    borderColor:[GREEN,RED,BLUE],
+    borderWidth:1.5,borderRadius:6
+  }]},options:{responsive:true,maintainAspectRatio:false,
+  plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'฿'+fmt(c.raw)}}},
+  scales:{y:{ticks:{callback:v=>'฿'+(v/1e6).toFixed(1)+'M'},grid:{color:'#f0f2f5'}},
+    x:{grid:{display:false}}}}});
 
 const pofTbody=document.getElementById('pofTable');
 [
@@ -402,56 +478,6 @@ const pofTbody=document.getElementById('pofTable');
   pofTbody.appendChild(tr);
 });
 
-// ─── CHARTS ───
-
-new Chart(document.getElementById('mfsbNetChart'),{type:'bar',data:{labels:months6,datasets:[{
-  label:'Net Flow (฿)',data:mfsbNet,
-  backgroundColor:mfsbNet.map(v=>v>=0?GREEN+'cc':RED+'cc'),
-  borderColor:mfsbNet.map(v=>v>=0?GREEN:RED),borderWidth:1.5,borderRadius:5
-}]},options:{responsive:true,maintainAspectRatio:false,
-  plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>(c.raw<0?'-':'+')+'฿'+fmt(c.raw)}}},
-  scales:{y:{ticks:{callback:v=>'฿'+(v/1e6).toFixed(1)+'M'},grid:{color:'#f0f2f5'}},x:{grid:{display:false}}}}});
-
-new Chart(document.getElementById('mfsbBarChart'),{type:'bar',data:{labels:months6,datasets:[
-  {label:'รายรับ',data:mfsbIncome,backgroundColor:GREEN+'99',borderColor:GREEN,borderWidth:1.5,borderRadius:4},
-  {label:'รายจ่าย',data:mfsbExpense,backgroundColor:RED+'99',borderColor:RED,borderWidth:1.5,borderRadius:4}
-]},options:{responsive:true,maintainAspectRatio:false,
-  plugins:{tooltip:{callbacks:{label:c=>'฿'+fmt(c.raw)}}},
-  scales:{y:{ticks:{callback:v=>'฿'+(v/1e6).toFixed(1)+'M'},grid:{color:'#f0f2f5'}},x:{grid:{display:false}}}}});
-
-const mfsb2025Net=[2169925,1976350,-538000,-1372700,-2962090,636026,-172003,194711,-733542,-2622889,64258,-8975466];
-const months12=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
-new Chart(document.getElementById('mfsb2025Chart'),{type:'bar',data:{labels:months12,datasets:[{
-  label:'Net Flow 2568',data:mfsb2025Net,
-  backgroundColor:mfsb2025Net.map(v=>v>=0?GREEN+'cc':RED+'cc'),
-  borderColor:mfsb2025Net.map(v=>v>=0?GREEN:RED),borderWidth:1.5,borderRadius:4
-}]},options:{responsive:true,maintainAspectRatio:false,
-  plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>(c.raw<0?'-':'+')+'฿'+fmt(c.raw)}}},
-  scales:{y:{ticks:{callback:v=>'฿'+(v/1e6).toFixed(1)+'M'},grid:{color:'#f0f2f5'}},
-    x:{grid:{display:false},ticks:{font:{size:10}}}}}});
-
-new Chart(document.getElementById('mfsbAnnualPieChart'),{type:'doughnut',data:{
-  labels:['เงินค้างชำระ ELT','ค่าบริการระบบ/โดเมน','ค่าที่ปรึกษา','ค่าสอบบัญชี','ภาษีที่ดิน','ลิฟท์+กำจัดปลวก','ภาษีมูลนิธิ','PEAK+อื่นๆ'],
-  datasets:[{data:[5243656,267259,200000,72750,39690,57928,18905,136690],
-    backgroundColor:['#c62828','#e53935','#ef9a9a','#f0a500','#ffd54f','#42a5f5','#66bb6a','#bdbdbd'],
-    borderWidth:2,borderColor:'#fff'}]},
-  options:{responsive:true,maintainAspectRatio:false,
-    plugins:{legend:{position:'right',labels:{font:{size:11},boxWidth:12}},
-      tooltip:{callbacks:{label:c=>`${c.label}: ฿${fmt(c.raw)}`}}}}});
-
-new Chart(document.getElementById('pofBarChart'),{type:'bar',data:{
-  labels:['รายรับรวม','รายจ่ายรวม','Net (กำไรสะสม)'],
-  datasets:[{
-    label:'จำนวน (฿)',
-    data:[10036741,3181416,6854650],
-    backgroundColor:[GREEN+'cc',RED+'cc',BLUE+'cc'],
-    borderColor:[GREEN,RED,BLUE],
-    borderWidth:1.5,borderRadius:6
-  }]},options:{responsive:true,maintainAspectRatio:false,
-  plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'฿'+fmt(c.raw)}}},
-  scales:{y:{ticks:{callback:v=>'฿'+(v/1e6).toFixed(1)+'M'},grid:{color:'#f0f2f5'}},
-    x:{grid:{display:false}}}}});
-
 new Chart(document.getElementById('pofDonationPie'),{type:'doughnut',data:{
   labels:['เงินบริจาค (จ่ายออก)','ค่าใช้จ่ายพิพิธภัณฑ์','ค่าตกแต่งแกะสลัก','ค่าแปลเอกสาร','ค่าสอบบัญชีฯ','อื่นๆ'],
   datasets:[{data:[2910748,103283,90000,42800,34000,585],
@@ -461,6 +487,7 @@ new Chart(document.getElementById('pofDonationPie'),{type:'doughnut',data:{
     plugins:{legend:{position:'right',labels:{font:{size:10},boxWidth:11}},
       tooltip:{callbacks:{label:c=>`${c.label}: ฿${fmt(c.raw)}`}}}}});
 
+// ─── MAM Charts ───
 new Chart(document.getElementById('mamAnnualChart'),{type:'bar',data:{
   labels:['ปี 2561 (2018)','ปี 2562 (2019)','ปี 2563 (2020)'],
   datasets:[
@@ -488,17 +515,21 @@ new Chart(document.getElementById('mamExpPie'),{type:'doughnut',data:{
     plugins:{legend:{position:'bottom',labels:{font:{size:11},boxWidth:12}},
       tooltip:{callbacks:{label:c=>`${c.label}: ฿${fmt(c.raw)}`}}}}});
 
+// ─── Summary Charts ───
 new Chart(document.getElementById('summaryCompare'),{type:'bar',data:{
   labels:['รายรับ','รายจ่าย','Net'],
   datasets:[
-    {label:'MFSB (H1/2569)',data:[12918825,15668266,-2749441],backgroundColor:BLUE+'aa',borderColor:BLUE,borderWidth:1.5,borderRadius:4},
-    {label:'POF (H1/2569)',data:[4633625,4628956,4669],backgroundColor:TEAL+'aa',borderColor:TEAL,borderWidth:1.5,borderRadius:4}
+    {label:'MFSB (H1/2569)',data:[13080171,19066099,-5985928],
+      backgroundColor:[GREEN+'99',RED+'99',BLUE+'99'],borderColor:[GREEN,RED,BLUE],borderWidth:1.5,borderRadius:5},
+    {label:'POF (H1/2569)',data:[4633625,4628956,4669],
+      backgroundColor:[GREEN+'55',RED+'55',BLUE+'55'],borderColor:[GREEN,RED,BLUE],
+      borderWidth:1.5,borderRadius:5,borderDash:[4,4]}
   ]},options:{responsive:true,maintainAspectRatio:false,
-  plugins:{tooltip:{callbacks:{label:c=>(c.raw<0?'-':'+')+'฿'+fmt(c.raw)}}},
+  plugins:{tooltip:{callbacks:{label:c=>(c.raw<0?'-':'')+'฿'+fmt(c.raw)}}},
   scales:{y:{ticks:{callback:v=>'฿'+(v/1e6).toFixed(1)+'M'},grid:{color:'#f0f2f5'}},x:{grid:{display:false}}}}});
 
 new Chart(document.getElementById('sumIncomeBar'),{type:'bar',data:{labels:months6,datasets:[
-  {label:'MFSB รับโอน ตปท.',data:mfsbTpat,backgroundColor:BLUE+'99',borderColor:BLUE,borderWidth:1.5,borderRadius:4}
+  {label:'รายรับ MFSB 2569',data:mfsbRev2026,backgroundColor:BLUE+'99',borderColor:BLUE,borderWidth:1.5,borderRadius:4}
 ]},options:{responsive:true,maintainAspectRatio:false,
   plugins:{tooltip:{callbacks:{label:c=>'฿'+fmt(c.raw)}}},
   scales:{y:{ticks:{callback:v=>'฿'+(v/1e6).toFixed(1)+'M'},grid:{color:'#f0f2f5'}},x:{grid:{display:false}}}}});
