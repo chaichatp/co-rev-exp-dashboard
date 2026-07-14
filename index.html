@@ -338,6 +338,33 @@ tr:hover td{background:#fafbff}
   </div>
 
   <div class="section">
+    <h2>สรุปรายปี — ทุก Entity (Net Flow)</h2>
+    <div class="two-col">
+      <div>
+        <p style="font-size:.8rem;font-weight:700;color:#1a2f55;margin-bottom:8px">มูลนิธิ (2568)</p>
+        <div class="chart-wrap" style="height:240px"><canvas id="yearlyFoundChart"></canvas></div>
+      </div>
+      <div>
+        <p style="font-size:.8rem;font-weight:700;color:#1a2f55;margin-bottom:8px">บริษัท (2561–2563)</p>
+        <div class="chart-wrap" style="height:240px"><canvas id="yearlyCorpChart"></canvas></div>
+      </div>
+    </div>
+    <table style="margin-top:18px">
+      <thead><tr><th>Entity</th><th>ปี</th><th>รายรับ (฿)</th><th>รายจ่าย (฿)</th><th>Net (฿)</th><th>หมายเหตุ</th></tr></thead>
+      <tbody>
+        <tr><td><strong>MFSB</strong></td><td>2568</td><td class="tpos">37,305,572</td><td class="tneg">58,327,934</td><td class="tneg">-21,022,362</td><td style="font-size:.78rem;color:#888">ทั้งปี ม.ค.–ธ.ค.</td></tr>
+        <tr><td><strong>POF</strong></td><td>2568</td><td class="tpos">10,036,741</td><td class="tneg">3,181,416</td><td class="tpos">+6,854,650</td><td style="font-size:.78rem;color:#888">งวดแรก ส.ค.–ธ.ค. (งบตรวจสอบ)</td></tr>
+        <tr style="background:#f8f9fa"><td><strong>Multiam</strong></td><td>2561</td><td class="tpos">10,553,874</td><td class="tneg">10,159,320</td><td class="tpos">+394,536</td><td style="font-size:.78rem;color:#888"></td></tr>
+        <tr style="background:#f8f9fa"><td><strong>Multiam</strong></td><td>2562</td><td class="tpos">11,774,175</td><td class="tneg">10,912,479</td><td class="tpos">+546,466</td><td style="font-size:.78rem;color:#888"></td></tr>
+        <tr style="background:#f8f9fa"><td><strong>Multiam</strong></td><td>2563</td><td class="tpos">5,274,300</td><td class="tneg">9,917,213</td><td class="tneg">-4,642,912</td><td style="font-size:.78rem;color:#888">COVID-19</td></tr>
+        <tr><td><strong>WMA</strong></td><td>2562</td><td class="tpos">3,231</td><td class="tneg">21,149</td><td class="tneg">-17,918</td><td style="font-size:.78rem;color:#888"></td></tr>
+        <tr><td><strong>WMA</strong></td><td>2563</td><td>0</td><td class="tneg">840,192</td><td class="tneg">-840,192</td><td style="font-size:.78rem;color:#888">ค่าใช้จ่ายปิดกิจการ</td></tr>
+      </tbody>
+    </table>
+    <p class="ann-label" style="margin-top:8px">* Multiam/WMA: ข้อมูลจากงบเปรียบเทียบ Excel | MFSB: ข้อมูลจาก RECORD sheet | POF 2568: งบตรวจสอบ ASM Audit</p>
+  </div>
+
+  <div class="section">
     <h2>เปรียบเทียบ MFSB vs POF — H1/2569 รายรับ / รายจ่าย / Net</h2>
     <div class="chart-wrap"><canvas id="summaryCompare"></canvas></div>
   </div>
@@ -570,6 +597,25 @@ new Chart(document.getElementById('sumIncomeBar'),{type:'bar',data:{labels:month
 ]},options:{responsive:true,maintainAspectRatio:false,
   plugins:{tooltip:{callbacks:{label:c=>'฿'+fmt(c.raw)}}},
   scales:{y:{ticks:{callback:v=>'฿'+(v/1e6).toFixed(1)+'M'},grid:{color:'#f0f2f5'}},x:{grid:{display:false}}}}});
+// ─── Yearly comparison charts ───
+new Chart(document.getElementById('yearlyFoundChart'),{type:'bar',data:{
+  labels:['MFSB (2568)','POF (2568)'],
+  datasets:[
+    {label:'รายรับ',data:[37305572,10036741],backgroundColor:GREEN+'99',borderColor:GREEN,borderWidth:1.5,borderRadius:4},
+    {label:'รายจ่าย',data:[58327934,3181416],backgroundColor:RED+'99',borderColor:RED,borderWidth:1.5,borderRadius:4}
+  ]},options:{responsive:true,maintainAspectRatio:false,
+  plugins:{tooltip:{callbacks:{label:c=>'฿'+fmt(c.raw)}}},
+  scales:{y:{ticks:{callback:v=>'฿'+(v/1e6).toFixed(0)+'M'},grid:{color:'#f0f2f5'}},x:{grid:{display:false}}}}});
+
+new Chart(document.getElementById('yearlyCorpChart'),{type:'bar',data:{
+  labels:['Multiam\n2561','Multiam\n2562','Multiam\n2563','WMA\n2562','WMA\n2563'],
+  datasets:[
+    {label:'รายรับ',data:[10553874,11774175,5274300,3231,0],backgroundColor:GREEN+'99',borderColor:GREEN,borderWidth:1.5,borderRadius:4},
+    {label:'รายจ่าย',data:[10159320,10912479,9917213,21149,840192],backgroundColor:RED+'99',borderColor:RED,borderWidth:1.5,borderRadius:4}
+  ]},options:{responsive:true,maintainAspectRatio:false,
+  plugins:{tooltip:{callbacks:{label:c=>'฿'+fmt(c.raw)}}},
+  scales:{y:{ticks:{callback:v=>'฿'+(v/1e6).toFixed(0)+'M'},grid:{color:'#f0f2f5'}},x:{grid:{display:false},ticks:{font:{size:10}}}}}});
+
 // ─── Chatbot ───
 const CHAT_API = 'https://nhomkai.multiam.com/chat';
 
