@@ -2,7 +2,7 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Dashboard รายรับ-รายจ่าย • All Entities</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -44,9 +44,9 @@ tr:hover td{background:#fafbff}
 .legend{display:flex;gap:18px;flex-wrap:wrap;font-size:.8rem;color:#555;margin-bottom:12px}
 .legend-dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px}
 /* Floating chatbot */
-#chat-btn{position:fixed;bottom:24px;right:24px;width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,#1a2f55,#2e5a9c);color:#fff;font-size:1.5rem;border:none;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.25);z-index:999;display:flex;align-items:center;justify-content:center;transition:.2s}
+#chat-btn{position:fixed;bottom:calc(24px + env(safe-area-inset-bottom,0px));right:24px;width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,#1a2f55,#2e5a9c);color:#fff;font-size:1.5rem;border:none;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.25);z-index:9999;display:flex;align-items:center;justify-content:center;transition:.2s}
 #chat-btn:hover{transform:scale(1.08)}
-#chat-panel{position:fixed;bottom:90px;right:24px;width:320px;max-height:460px;background:#fff;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.18);z-index:998;display:none;flex-direction:column;overflow:hidden}
+#chat-panel{position:fixed;bottom:calc(90px + env(safe-area-inset-bottom,0px));right:24px;width:320px;max-height:460px;background:#fff;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.18);z-index:9998;display:none;flex-direction:column;overflow:hidden}
 #chat-panel.open{display:flex}
 #chat-header{background:linear-gradient(135deg,#1a2f55,#2e5a9c);color:#fff;padding:12px 16px;font-size:.9rem;font-weight:700;display:flex;justify-content:space-between;align-items:center}
 #chat-close{background:none;border:none;color:#fff;cursor:pointer;font-size:1.1rem;line-height:1}
@@ -61,8 +61,8 @@ tr:hover td{background:#fafbff}
 #chat-send{background:#2e5a9c;color:#fff;border:none;border-radius:20px;padding:7px 14px;cursor:pointer;font-size:.85rem;font-family:'Sarabun',sans-serif;transition:.15s}
 #chat-send:hover{background:#1a2f55}
 @media(max-width:600px){
-  #chat-panel{width:calc(100vw - 32px);right:16px;bottom:80px}
-  #chat-btn{bottom:16px;right:16px;width:48px;height:48px;font-size:1.3rem}
+  #chat-panel{width:calc(100vw - 32px);right:16px;bottom:calc(80px + env(safe-area-inset-bottom,0px));max-height:70vh}
+  #chat-btn{bottom:calc(20px + env(safe-area-inset-bottom,0px));right:16px;width:52px;height:52px;font-size:1.4rem}
 }
 @media(max-width:600px){
   header{padding:14px 16px;flex-wrap:wrap;gap:8px}
