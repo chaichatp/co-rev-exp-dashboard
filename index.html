@@ -112,14 +112,14 @@ tr:hover td{background:#fafbff}
 </div>
 
 <div class="tabs">
-  <div class="tab active" onclick="switchTab('mfsb')">มูลนิธิธรรมทานกุศลจิต</div>
+  <div class="tab active" onclick="switchTab('summary')">ภาพรวม</div>
+  <div class="tab" onclick="switchTab('mfsb')">มูลนิธิธรรมทานกุศลจิต</div>
   <div class="tab" onclick="switchTab('pof')">มูลนิธิปิลันธน์โอวาท</div>
   <div class="tab" onclick="switchTab('mam')">บจก.มัลติแอม</div>
-  <div class="tab" onclick="switchTab('summary')">ภาพรวมรวม</div>
 </div>
 
 <!-- MFSB TAB -->
-<div id="tab-mfsb" class="page active">
+<div id="tab-mfsb" class="page">
   <div class="cards">
     <div class="card"><div class="label">ยอดยกมา 1 ม.ค. 2569</div><div class="value">฿24,548,205</div><div class="sub">เงินคงเหลือในบัญชี</div></div>
     <div class="card"><div class="label">รายรับรวม H1/2569</div><div class="value pos">฿13,080,171</div><div class="sub">ม.ค.–มิ.ย. 2569</div></div>
@@ -314,7 +314,7 @@ tr:hover td{background:#fafbff}
 </div>
 
 <!-- SUMMARY TAB -->
-<div id="tab-summary" class="page">
+<div id="tab-summary" class="page active">
   <div class="cards">
     <div class="card"><div class="label">MFSB – ยอดยกมา 2569</div><div class="value">฿24,548,205</div><div class="note">มูลนิธิ ธรรมทานกุศลจิต</div></div>
     <div class="card"><div class="label">POF – ยอดยกมา 1 ม.ค. 2569</div><div class="value">฿16,820,052</div><div class="note">มูลนิธิ ปิลันธน์โอวาท</div></div>
@@ -366,7 +366,7 @@ tr:hover td{background:#fafbff}
 
 <script>
 function switchTab(name){
-  const tabKeys=['mfsb','pof','mam','summary'];
+  const tabKeys=['summary','mfsb','pof','mam'];
   document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',tabKeys[i]===name));
   document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id==='tab-'+name));
 }
