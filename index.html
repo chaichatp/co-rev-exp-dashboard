@@ -311,7 +311,7 @@ tr:hover td{background:#fafbff}
 <div id="tab-found-summary" class="page active">
   <div class="section">
     <h2>สรุปรายปี — มูลนิธิ (Historical Actuals)</h2>
-    <div class="chart-wrap" style="height:300px"><canvas id="yearlyFoundChart"></canvas></div>
+    <div class="chart-wrap" style="height:340px"><canvas id="yearlyFoundChart"></canvas></div>
     <div style="overflow-x:auto;margin-top:18px">
     <table style="min-width:640px">
       <thead><tr><th>Entity</th><th>ปี</th><th>รายรับ (฿)</th><th>รายจ่าย (฿)</th><th>Net (฿)</th><th>หมายเหตุ</th></tr></thead>
@@ -612,13 +612,21 @@ new Chart(document.getElementById('sumIncomeBar'),{type:'bar',data:{labels:month
   scales:{y:{ticks:{callback:v=>'฿'+(v/1e6).toFixed(1)+'M'},grid:{color:'#f0f2f5'}},x:{grid:{display:false}}}}});
 // ─── Yearly comparison charts ───
 new Chart(document.getElementById('yearlyFoundChart'),{type:'bar',data:{
-  labels:['MFSB\n2563','MFSB\n2564','MFSB\n2565','MFSB\n2566','MFSB\n2567','MFSB\n2568','POF\n2568'],
+  labels:['2563','2564','2565','2566','2567','2568'],
   datasets:[
-    {label:'รายรับ',data:[43872609,13391056,4287225,72545135,85513068,42349991,10036741],backgroundColor:GREEN+'99',borderColor:GREEN,borderWidth:1.5,borderRadius:4},
-    {label:'รายจ่าย',data:[13442572,11003300,32236757,41727539,79906563,65320622,3181416],backgroundColor:RED+'99',borderColor:RED,borderWidth:1.5,borderRadius:4}
+    {label:'MFSB รายรับ',data:[43872609,13391056,4287225,72545135,85513068,42349991],backgroundColor:GREEN+'99',borderColor:GREEN,borderWidth:1.5,borderRadius:4},
+    {label:'MFSB รายจ่าย',data:[13442572,11003300,32236757,41727539,79906563,65320622],backgroundColor:RED+'99',borderColor:RED,borderWidth:1.5,borderRadius:4},
+    {label:'POF รายรับ',data:[null,null,null,null,null,10036741],backgroundColor:TEAL+'99',borderColor:TEAL,borderWidth:1.5,borderRadius:4},
+    {label:'POF รายจ่าย',data:[null,null,null,null,null,3181416],backgroundColor:'#e65100'+'99',borderColor:'#e65100',borderWidth:1.5,borderRadius:4},
+    {type:'line',label:'เกณฑ์ 10M',data:[10000000,10000000,10000000,10000000,10000000,10000000],
+      borderColor:GOLD,borderWidth:2.5,borderDash:[7,4],pointRadius:0,fill:false,tension:0,order:0}
   ]},options:{responsive:true,maintainAspectRatio:false,
-  plugins:{tooltip:{callbacks:{label:c=>'฿'+fmt(c.raw)}}},
-  scales:{y:{ticks:{callback:v=>'฿'+(v/1e6).toFixed(0)+'M'},grid:{color:'#f0f2f5'}},x:{grid:{display:false},ticks:{font:{size:9}}}}}})
+  plugins:{
+    tooltip:{callbacks:{label:c=>c.raw==null?'':c.dataset.label+': ฿'+fmt(c.raw)}},
+    legend:{position:'bottom',labels:{font:{size:10},boxWidth:11}}
+  },
+  scales:{y:{ticks:{callback:v=>'฿'+(v/1e6).toFixed(0)+'M'},grid:{color:'#f0f2f5'}},
+    x:{grid:{display:false},ticks:{font:{size:11}}}}}})
 
 new Chart(document.getElementById('yearlyCorpChart'),{type:'bar',data:{
   labels:['MAM\n2561','MAM\n2562','MAM\n2563','MAM\n2564','MAM\n2565','MAM\n2566','MAM\n2567','MAM\n2568','WMA\n2562','WMA\n2563'],
