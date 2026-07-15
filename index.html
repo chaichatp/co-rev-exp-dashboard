@@ -42,6 +42,15 @@ td:first-child{text-align:left;position:sticky;left:0;z-index:2;background:#fff;
 tr:hover td{background:#fafbff}
 tr:hover td:first-child{background:#fafbff}
 .tpos{color:#27ae60;font-weight:600}.tneg{color:#e53935;font-weight:600}
+.expand-btn{background:none;border:none;cursor:pointer;font-size:.85rem;padding:2px 6px;border-radius:4px;transition:.15s;color:#1a2f55;line-height:1}
+.expand-btn:hover{background:#e8eaf6}.expand-btn.open{transform:rotate(90deg);display:inline-block}
+.yr-detail{background:#f4f6fb}.yr-detail td{padding:0!important;border-bottom:none}
+.det-box{padding:10px 14px;display:grid;grid-template-columns:1fr 1fr;gap:14px;font-size:.8rem}
+.det-box h4{font-size:.76rem;font-weight:700;color:#1a2f55;margin-bottom:5px;padding-bottom:3px;border-bottom:1px solid #dde}
+.det-row{display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px dotted #eaecf5}
+.det-lbl{color:#555;max-width:66%}.det-val{font-weight:600;white-space:nowrap}
+.det-total{font-weight:700;color:#1a2f55;border-top:1.5px solid #ccd!important;margin-top:2px}
+@media(max-width:600px){.det-box{grid-template-columns:1fr}}
 .ann-label{font-size:.75rem;color:#888;font-style:italic;margin-top:8px}
 .legend{display:flex;gap:18px;flex-wrap:wrap;font-size:.8rem;color:#555;margin-bottom:12px}
 .legend-dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px}
@@ -315,17 +324,9 @@ tr:hover td:first-child{background:#fafbff}
     <h2>สรุปรายปี — มูลนิธิ (Historical Actuals)</h2>
     <div class="chart-wrap" style="height:340px"><canvas id="yearlyFoundChart"></canvas></div>
     <div style="overflow-x:auto;margin-top:18px">
-    <table style="min-width:640px">
+    <table id="foundYearlyTable" style="min-width:660px">
       <thead><tr><th>Entity</th><th>ปี</th><th>รายรับ (฿)</th><th>รายจ่าย (฿)</th><th>Net (฿)</th><th>หมายเหตุ</th></tr></thead>
-      <tbody>
-        <tr style="background:#f8f9fa"><td><strong>MFSB</strong></td><td>2563</td><td class="tpos">43,872,609</td><td class="tneg">13,442,572</td><td class="tpos">+30,430,037</td><td style="font-size:.78rem;color:#888">⚠️ Disclaimer of Opinion (ผู้สอบบัญชี)</td></tr>
-        <tr style="background:#f8f9fa"><td><strong>MFSB</strong></td><td>2564</td><td class="tpos">13,391,056</td><td class="tneg">11,003,300</td><td class="tpos">+2,387,756</td><td style="font-size:.78rem;color:#888"></td></tr>
-        <tr style="background:#f8f9fa"><td><strong>MFSB</strong></td><td>2565</td><td class="tpos">4,287,225</td><td class="tneg">32,236,757</td><td class="tneg">-27,949,532</td><td style="font-size:.78rem;color:#888">ขาดทุนไถ่ถอนเงินลงทุน 8M + บริจาคออก 14.5M</td></tr>
-        <tr style="background:#f8f9fa"><td><strong>MFSB</strong></td><td>2566</td><td class="tpos">72,545,135</td><td class="tneg">41,727,539</td><td class="tpos">+30,817,596</td><td style="font-size:.78rem;color:#888">รายรับบริจาคสูง 71.8M</td></tr>
-        <tr style="background:#f8f9fa"><td><strong>MFSB</strong></td><td>2567</td><td class="tpos">85,513,068</td><td class="tneg">79,906,563</td><td class="tpos">+5,606,505</td><td style="font-size:.78rem;color:#888">รายรับบริจาคสูงสุด 84.8M</td></tr>
-        <tr style="background:#f8f9fa"><td><strong>MFSB</strong></td><td>2568</td><td class="tpos">42,349,991</td><td class="tneg">65,320,622</td><td class="tneg">-22,970,631</td><td style="font-size:.78rem;color:#888">บริจาคออก 47.9M</td></tr>
-        <tr><td><strong>POF</strong></td><td>2568</td><td class="tpos">10,036,741</td><td class="tneg">3,181,416</td><td class="tpos">+6,854,650</td><td style="font-size:.78rem;color:#888">งวดแรก ส.ค.–ธ.ค. (ก่อตั้ง 25 ส.ค. 2568)</td></tr>
-      </tbody>
+      <tbody id="foundYearlyTbody"></tbody>
     </table>
     </div>
     <p class="ann-label" style="margin-top:8px">* ข้อมูลทั้งหมดจากงบการเงินตรวจสอบ (ASM Audit) | 2563: Disclaimer of Opinion — ตัวเลขมาจากคอลัมน์เปรียบเทียบในงบปี 2564</p>
@@ -612,23 +613,102 @@ new Chart(document.getElementById('sumIncomeBar'),{type:'bar',data:{labels:month
 ]},options:{responsive:true,maintainAspectRatio:false,
   plugins:{tooltip:{callbacks:{label:c=>'฿'+fmt(c.raw)}}},
   scales:{y:{ticks:{callback:v=>'฿'+(v/1e6).toFixed(1)+'M'},grid:{color:'#f0f2f5'}},x:{grid:{display:false}}}}});
-// ─── Yearly comparison charts ───
+// ─── Yearly comparison charts — Foundation breakdown data ───
+const foundData=[
+  {entity:'MFSB',year:'2563',rev:43872609,exp:13442572,net:30430037,
+   note:'⚠️ Disclaimer of Opinion (ผู้สอบบัญชี) — ตัวเลขจากคอลัมน์เปรียบเทียบปี 2564',
+   revBreak:[['เงินรับบริจาค',41896287],['ดอกเบี้ย+ปันผล',1697005],['รายได้สถานที่/บริการ',279317]],
+   expBreak:[['เงินบริจาค (จ่ายออก)',8430983],['ค่าพิมพ์/เผยแพร่',801305],['ค่าพิพิธภัณฑ์',69570],['ค่าเสื่อมราคา',1017395],['ค่าซ่อมแซม',200000],['ค่าสาธารณูปโภค',386830],['อื่นๆ+ภาษี (ประมาณ)',2536489]]},
+  {entity:'MFSB',year:'2564',rev:13391056,exp:11003300,net:2387756,note:'',
+   revBreak:[['เงินรับบริจาค',10418371],['ดอกเบี้ย+ปันผล',2606316],['รายได้สถานที่/บริการ',366369]],
+   expBreak:[['เงินบริจาค (จ่ายออก)',1001044],['ค่าพิมพ์/เผยแพร่',2542855],['ค่าพิพิธภัณฑ์',1792635],['ค่าเสื่อมราคา',1842297],['ค่าซ่อมแซม',1583312],['ค่าสาธารณูปโภค',377901],['อื่นๆ+ภาษี',1863256]]},
+  {entity:'MFSB',year:'2565',rev:4287225,exp:32236757,net:-27949532,note:'ขาดทุนไถ่ถอนเงินลงทุน 8M + บริจาคออก 14.5M',
+   revBreak:[['เงินรับบริจาค',3654177],['ดอกเบี้ยรับ',33753],['รายได้สถานที่/บริการ',599295]],
+   expBreak:[['เงินบริจาค (จ่ายออก)',14452925],['ค่าพิมพ์/เผยแพร่',2249950],['ค่าพิพิธภัณฑ์',2444773],['ค่าเสื่อมราคา',2011184],['ค่าซ่อมแซม',806021],['ค่าสาธารณูปโภค',591016],['ขาดทุนไถ่ถอนเงินลงทุน',8022473],['อื่นๆ+ภาษี',1658415]]},
+  {entity:'MFSB',year:'2566',rev:72545135,exp:41727539,net:30817596,note:'รายรับบริจาคสูง 71.8M',
+   revBreak:[['เงินรับบริจาค',71804320],['ดอกเบี้ยรับ',99494],['รายได้สถานที่/บริการ',641321]],
+   expBreak:[['เงินบริจาค (จ่ายออก)',17753383],['ค่าพิมพ์/เผยแพร่',13252027],['ค่าพิพิธภัณฑ์',3971061],['ค่าเสื่อมราคา',1952415],['ค่าซ่อมแซม',549229],['ค่าสาธารณูปโภค',1164354],['อื่นๆ+ภาษี',3085070]]},
+  {entity:'MFSB',year:'2567',rev:85513068,exp:79906563,net:5606505,note:'รายรับบริจาคสูงสุด 84.8M',
+   revBreak:[['เงินรับบริจาค',84821492],['ดอกเบี้ยรับ',171849],['รายได้สถานที่/บริการ',519727]],
+   expBreak:[['เงินบริจาค (จ่ายออก)',53747360],['ค่าพิมพ์/เผยแพร่',10262680],['ค่าพิพิธภัณฑ์',4635520],['ค่าเสื่อมราคา',1994341],['ค่าซ่อมแซม',3771010],['ค่าสาธารณูปโภค',1256600],['อื่นๆ+ภาษี',4239052]]},
+  {entity:'MFSB',year:'2568',rev:42349991,exp:65320622,net:-22970631,note:'บริจาคออก 47.9M',
+   revBreak:[['เงินรับบริจาค',41975066],['ดอกเบี้ยรับ',113868],['รายได้สถานที่/บริการ',261057]],
+   expBreak:[['เงินบริจาค (จ่ายออก)',47897868],['ค่าพิมพ์/เผยแพร่',3919700],['ค่าพิพิธภัณฑ์',4977112],['ค่าเสื่อมราคา',2117825],['ค่าซ่อมแซม',550989],['ค่าสาธารณูปโภค',1130050],['อื่นๆ+ภาษี',4727078]]},
+  {entity:'POF',year:'2568',rev:10036741,exp:3181416,net:6854650,note:'งวดแรก ส.ค.–ธ.ค. 2568 (ก่อตั้ง 25 ส.ค. 2568)',
+   revBreak:[['เงินรับบริจาค',10030000],['ดอกเบี้ยรับ',6741]],
+   expBreak:[['เงินบริจาค (จ่ายออก)',2910748],['ค่าใช้จ่ายพิพิธภัณฑ์',103283],['ค่างานตกแต่งแกะสลัก',90000],['ค่าแปลเอกสาร',42800],['ค่าสอบบัญชีและวิชาชีพ',34000],['ค่าเสื่อมราคา+ค่าธนาคาร+ภาษี',1259]]}
+];
+
+// Build expandable table
+(function buildFoundTable(){
+  const tbody=document.getElementById('foundYearlyTbody');
+  foundData.forEach((d,i)=>{
+    const nr=document.createElement('tr');
+    nr.style.background='#f8f9fa';
+    const netSign=d.net>=0?'+':'-';
+    const netAbs=fmt(Math.abs(d.net));
+    nr.innerHTML=`<td><button class="expand-btn" id="fbtn${i}" onclick="toggleFoundRow(${i})">&#9654;</button> <strong>${d.entity}</strong></td><td>${d.year}</td><td class="tpos">${fmt(d.rev)}</td><td class="tneg">${fmt(d.exp)}</td><td class="${d.net>=0?'tpos':'tneg'}">${netSign}${netAbs}</td><td style="font-size:.78rem;color:#888">${d.note}</td>`;
+    tbody.appendChild(nr);
+    const dr=document.createElement('tr');
+    dr.id='fdet'+i;dr.className='yr-detail';dr.style.display='none';
+    const ri=d.revBreak.map(([l,v])=>`<div class="det-row"><span class="det-lbl">${l}</span><span class="det-val tpos">${fmt(v)}</span></div>`).join('');
+    const ei=d.expBreak.map(([l,v])=>`<div class="det-row"><span class="det-lbl">${l}</span><span class="det-val tneg">${fmt(v)}</span></div>`).join('');
+    dr.innerHTML=`<td colspan="6"><div class="det-box"><div><h4>รายรับแยกหมวด</h4>${ri}<div class="det-row det-total"><span class="det-lbl">รวมรายรับ</span><span class="det-val tpos">${fmt(d.rev)}</span></div></div><div><h4>รายจ่ายแยกหมวด</h4>${ei}<div class="det-row det-total"><span class="det-lbl">รวมรายจ่าย</span><span class="det-val tneg">${fmt(d.exp)}</span></div></div></div></td>`;
+    tbody.appendChild(dr);
+  });
+})();
+
+function toggleFoundRow(i){
+  const dr=document.getElementById('fdet'+i);
+  const btn=document.getElementById('fbtn'+i);
+  const open=dr.style.display!=='none';
+  dr.style.display=open?'none':'';
+  btn.classList.toggle('open',!open);
+}
+
+// ─── Yearly comparison charts — stacked breakdown ───
+const yr6=['2563','2564','2565','2566','2567','2568'];
 new Chart(document.getElementById('yearlyFoundChart'),{type:'bar',data:{
-  labels:['2563','2564','2565','2566','2567','2568'],
+  labels:yr6,
   datasets:[
-    {label:'MFSB รายรับ',data:[43872609,13391056,4287225,72545135,85513068,42349991],backgroundColor:GREEN+'99',borderColor:GREEN,borderWidth:1.5,borderRadius:4},
-    {label:'MFSB รายจ่าย',data:[13442572,11003300,32236757,41727539,79906563,65320622],backgroundColor:RED+'99',borderColor:RED,borderWidth:1.5,borderRadius:4},
-    {label:'POF รายรับ',data:[null,null,null,null,null,10036741],backgroundColor:TEAL+'99',borderColor:TEAL,borderWidth:1.5,borderRadius:4},
-    {label:'POF รายจ่าย',data:[null,null,null,null,null,3181416],backgroundColor:'#e65100'+'99',borderColor:'#e65100',borderWidth:1.5,borderRadius:4},
+    // MFSB Revenue stacks
+    {label:'MFSB รับบริจาค',data:[41896287,10418371,3654177,71804320,84821492,41975066],stack:'mfsb-rev',backgroundColor:'#2e7d32bb',borderWidth:0},
+    {label:'MFSB ดอกเบี้ย/ปันผล',data:[1697005,2606316,33753,99494,171849,113868],stack:'mfsb-rev',backgroundColor:'#66bb6abb',borderWidth:0},
+    {label:'MFSB รายได้สถานที่',data:[279317,366369,599295,641321,519727,261057],stack:'mfsb-rev',backgroundColor:'#a5d6a7bb',borderWidth:0},
+    // MFSB Expense stacks
+    {label:'MFSB บริจาคออก',data:[8430983,1001044,14452925,17753383,53747360,47897868],stack:'mfsb-exp',backgroundColor:'#b71c1cbb',borderWidth:0},
+    {label:'MFSB ค่าพิมพ์/เผยแพร่',data:[801305,2542855,2249950,13252027,10262680,3919700],stack:'mfsb-exp',backgroundColor:'#1565c0bb',borderWidth:0},
+    {label:'MFSB ค่าพิพิธภัณฑ์',data:[69570,1792635,2444773,3971061,4635520,4977112],stack:'mfsb-exp',backgroundColor:'#6a1b9abb',borderWidth:0},
+    {label:'MFSB ค่าเสื่อมราคา',data:[1017395,1842297,2011184,1952415,1994341,2117825],stack:'mfsb-exp',backgroundColor:'#546e7abb',borderWidth:0},
+    {label:'MFSB ค่าซ่อมแซม',data:[200000,1583312,806021,549229,3771010,550989],stack:'mfsb-exp',backgroundColor:'#e65100bb',borderWidth:0},
+    {label:'MFSB สาธารณูปโภค',data:[386830,377901,591016,1164354,1256600,1130050],stack:'mfsb-exp',backgroundColor:'#f9a825bb',borderWidth:0},
+    {label:'MFSB ขาดทุนไถ่ถอน',data:[0,0,8022473,0,0,0],stack:'mfsb-exp',backgroundColor:'#880e4fbb',borderWidth:0},
+    {label:'MFSB อื่นๆ+ภาษี',data:[2536489,1863256,1658415,3085070,4239052,4727078],stack:'mfsb-exp',backgroundColor:'#9e9e9ebb',borderWidth:0},
+    // POF 2568 only
+    {label:'POF รับบริจาค',data:[null,null,null,null,null,10030000],stack:'pof-rev',backgroundColor:'#00838fbb',borderWidth:0},
+    {label:'POF ดอกเบี้ย',data:[null,null,null,null,null,6741],stack:'pof-rev',backgroundColor:'#80deea99',borderWidth:0},
+    {label:'POF บริจาคออก',data:[null,null,null,null,null,2910748],stack:'pof-exp',backgroundColor:'#e91e63bb',borderWidth:0},
+    {label:'POF อื่นๆ',data:[null,null,null,null,null,270668],stack:'pof-exp',backgroundColor:'#f48fb1bb',borderWidth:0},
+    // 10M reference line
     {type:'line',label:'เกณฑ์ 10M',data:[10000000,10000000,10000000,10000000,10000000,10000000],
-      borderColor:GOLD,borderWidth:2.5,borderDash:[7,4],pointRadius:0,fill:false,tension:0,order:0}
+     borderColor:GOLD,borderWidth:2.5,borderDash:[7,4],pointRadius:0,fill:false,tension:0}
   ]},options:{responsive:true,maintainAspectRatio:false,
   plugins:{
-    tooltip:{callbacks:{label:c=>c.raw==null?'':c.dataset.label+': ฿'+fmt(c.raw)}},
-    legend:{position:'bottom',labels:{font:{size:10},boxWidth:11}}
+    tooltip:{callbacks:{
+      label:c=>{if(c.raw==null||c.raw===0)return null;return c.dataset.label+': ฿'+fmt(c.raw);}
+    }},
+    legend:{position:'bottom',labels:{font:{size:9},boxWidth:10,padding:6,
+      filter:(item,data)=>{
+        const ds=data.datasets[item.datasetIndex];
+        if(!ds.data) return true;
+        return ds.data.some(v=>v!=null&&v>0);
+      }
+    }}
   },
-  scales:{y:{ticks:{callback:v=>'฿'+(v/1e6).toFixed(0)+'M'},grid:{color:'#f0f2f5'}},
-    x:{grid:{display:false},ticks:{font:{size:11}}}}}})
+  scales:{
+    y:{stacked:true,ticks:{callback:v=>'฿'+(v/1e6).toFixed(0)+'M'},grid:{color:'#f0f2f5'}},
+    x:{grid:{display:false},ticks:{font:{size:11}}}
+  }}})
 
 new Chart(document.getElementById('yearlyCorpChart'),{type:'bar',data:{
   labels:['MAM\n2561','MAM\n2562','MAM\n2563','MAM\n2564','MAM\n2565','MAM\n2566','MAM\n2567','MAM\n2568','WMA\n2562','WMA\n2563'],
