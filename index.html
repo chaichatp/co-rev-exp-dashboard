@@ -42,19 +42,16 @@ td:first-child{text-align:left;position:sticky;left:0;z-index:2;background:#fff;
 tr:hover td{background:#fafbff}
 tr:hover td:first-child{background:#fafbff}
 .tpos{color:#27ae60;font-weight:600}.tneg{color:#e53935;font-weight:600}
-.found-split{display:flex;gap:16px;align-items:flex-start;margin-top:18px}
-.found-tbl-wrap{overflow-x:auto;flex:1;min-width:0}
-.found-panel{display:none;min-width:260px;width:300px;background:#f4f6fb;border:1px solid #dde;border-radius:8px;padding:14px 16px;font-size:.82rem;flex-shrink:0;position:sticky;top:58px}
-.found-panel h3{font-size:.84rem;font-weight:700;color:#1a2f55;margin-bottom:8px;padding-bottom:5px;border-bottom:2px solid #1a2f55}
-.found-panel h4{font-size:.76rem;font-weight:700;color:#1a2f55;margin:8px 0 4px;padding-bottom:3px;border-bottom:1px solid #dde}
+.expand-btn{background:none;border:none;cursor:pointer;font-size:.85rem;padding:2px 5px;border-radius:4px;transition:.15s;color:#1a2f55;line-height:1;display:inline-block}
+.expand-btn:hover{background:#e8eaf6}.expand-btn.open{transform:rotate(90deg)}
+.det-col{background:#f4f6fb;vertical-align:top;padding:6px 10px!important;min-width:320px}
+.det-inner{display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:.78rem}
+.det-inner h4{font-size:.74rem;font-weight:700;color:#1a2f55;margin-bottom:4px;padding-bottom:3px;border-bottom:1px solid #dde}
 .det-row{display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px dotted #eaecf5}
 .det-lbl{color:#555;max-width:66%}.det-val{font-weight:600;white-space:nowrap}
 .det-total{font-weight:700;color:#1a2f55;border-top:1.5px solid #ccd!important;margin-top:2px}
 .found-row-active td{background:#eef2ff!important}
-.found-row-active td:first-child{background:#e3e8ff!important}
-tr.found-clickable{cursor:pointer}
-tr.found-clickable:hover td{background:#f0f4ff}
-@media(max-width:700px){.found-split{flex-direction:column}.found-panel{width:100%;min-width:auto;position:static}}
+.found-row-active .det-col{background:#e8edf8!important}
 .ann-label{font-size:.75rem;color:#888;font-style:italic;margin-top:8px}
 .legend{display:flex;gap:18px;flex-wrap:wrap;font-size:.8rem;color:#555;margin-bottom:12px}
 .legend-dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px}
@@ -327,14 +324,11 @@ tr.found-clickable:hover td{background:#f0f4ff}
   <div class="section">
     <h2>สรุปรายปี — มูลนิธิ (Historical Actuals)</h2>
     <div class="chart-wrap" style="height:340px"><canvas id="yearlyFoundChart"></canvas></div>
-    <div class="found-split">
-      <div class="found-tbl-wrap">
-      <table id="foundYearlyTable" style="min-width:520px">
-        <thead><tr><th>Entity</th><th>ปี</th><th>รายรับ (฿)</th><th>รายจ่าย (฿)</th><th>Net (฿)</th><th>หมายเหตุ</th></tr></thead>
-        <tbody id="foundYearlyTbody"></tbody>
-      </table>
-      </div>
-      <div id="foundDetailPanel" class="found-panel"></div>
+    <div style="overflow-x:auto;margin-top:18px">
+    <table id="foundYearlyTable" style="min-width:540px">
+      <thead><tr><th>Entity</th><th>ปี</th><th>รายรับ (฿)</th><th>รายจ่าย (฿)</th><th>Net (฿)</th><th>หมายเหตุ</th><th style="width:0;padding:0"></th></tr></thead>
+      <tbody id="foundYearlyTbody"></tbody>
+    </table>
     </div>
     <p class="ann-label" style="margin-top:8px">* ข้อมูลทั้งหมดจากงบการเงินตรวจสอบ (ASM Audit) | 2563: Disclaimer of Opinion — ตัวเลขมาจากคอลัมน์เปรียบเทียบในงบปี 2564</p>
   </div>
@@ -646,27 +640,40 @@ const foundData=[
    expBreak:[['เงินบริจาค (จ่ายออก)',2910748],['ค่าใช้จ่ายพิพิธภัณฑ์',103283],['ค่างานตกแต่งแกะสลัก',90000],['ค่าแปลเอกสาร',42800],['ค่าสอบบัญชีและวิชาชีพ',34000],['ค่าเสื่อมราคา+ค่าธนาคาร+ภาษี',1259]]}
 ];
 
-// Build yearly table — clickable rows, detail in side panel
+// Build yearly table — expand button per row, detail expands as 7th column
 (function(){
   const tbody=document.getElementById('foundYearlyTbody');
   foundData.forEach((d,i)=>{
     const tr=document.createElement('tr');
-    tr.className='found-clickable';
+    tr.id='frow'+i;
     const netSign=d.net>=0?'+':'-';
-    tr.innerHTML=`<td><strong>${d.entity}</strong></td><td>${d.year}</td><td class="tpos">${fmt(d.rev)}</td><td class="tneg">${fmt(d.exp)}</td><td class="${d.net>=0?'tpos':'tneg'}">${netSign}${fmt(Math.abs(d.net))}</td><td style="font-size:.78rem;color:#888">${d.note}</td>`;
-    tr.addEventListener('click',()=>selectFoundRow(i));
+    tr.innerHTML=`<td><button class="expand-btn" id="fbtn${i}" onclick="toggleFoundRow(${i})">&#9654;</button> <strong>${d.entity}</strong></td><td>${d.year}</td><td class="tpos">${fmt(d.rev)}</td><td class="tneg">${fmt(d.exp)}</td><td class="${d.net>=0?'tpos':'tneg'}">${netSign}${fmt(Math.abs(d.net))}</td><td id="fnote${i}" colspan="2" style="font-size:.78rem;color:#888">${d.note}</td>`;
     tbody.appendChild(tr);
   });
 })();
 
-function selectFoundRow(i){
+function toggleFoundRow(i){
   const d=foundData[i];
-  document.querySelectorAll('#foundYearlyTbody tr').forEach((r,ri)=>r.classList.toggle('found-row-active',ri===i));
-  const ri=d.revBreak.map(([l,v])=>`<div class="det-row"><span class="det-lbl">${l}</span><span class="det-val tpos">${fmt(v)}</span></div>`).join('');
-  const ei=d.expBreak.map(([l,v])=>`<div class="det-row"><span class="det-lbl">${l}</span><span class="det-val tneg">${fmt(v)}</span></div>`).join('');
-  const panel=document.getElementById('foundDetailPanel');
-  panel.style.display='block';
-  panel.innerHTML=`<h3>${d.entity} ปี ${d.year}</h3><h4>รายรับแยกหมวด</h4>${ri}<div class="det-row det-total"><span class="det-lbl">รวมรายรับ</span><span class="det-val tpos">${fmt(d.rev)}</span></div><h4 style="margin-top:10px">รายจ่ายแยกหมวด</h4>${ei}<div class="det-row det-total"><span class="det-lbl">รวมรายจ่าย</span><span class="det-val tneg">${fmt(d.exp)}</span></div>`;
+  const row=document.getElementById('frow'+i);
+  const btn=document.getElementById('fbtn'+i);
+  const noteTd=document.getElementById('fnote'+i);
+  const existing=document.getElementById('fdet'+i);
+  if(existing){
+    existing.remove();
+    noteTd.colSpan=2;
+    btn.classList.remove('open');
+    row.classList.remove('found-row-active');
+  } else {
+    noteTd.colSpan=1;
+    const ri=d.revBreak.map(([l,v])=>`<div class="det-row"><span class="det-lbl">${l}</span><span class="det-val tpos">${fmt(v)}</span></div>`).join('');
+    const ei=d.expBreak.map(([l,v])=>`<div class="det-row"><span class="det-lbl">${l}</span><span class="det-val tneg">${fmt(v)}</span></div>`).join('');
+    const td=document.createElement('td');
+    td.id='fdet'+i;td.className='det-col';
+    td.innerHTML=`<div class="det-inner"><div><h4>รายรับแยกหมวด</h4>${ri}<div class="det-row det-total"><span class="det-lbl">รวมรายรับ</span><span class="det-val tpos">${fmt(d.rev)}</span></div></div><div><h4>รายจ่ายแยกหมวด</h4>${ei}<div class="det-row det-total"><span class="det-lbl">รวมรายจ่าย</span><span class="det-val tneg">${fmt(d.exp)}</span></div></div></div>`;
+    row.appendChild(td);
+    btn.classList.add('open');
+    row.classList.add('found-row-active');
+  }
 }
 
 // ─── Yearly comparison charts — stacked breakdown ───
