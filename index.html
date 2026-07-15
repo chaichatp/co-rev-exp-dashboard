@@ -45,15 +45,12 @@ tr:hover td:first-child{background:#fafbff}
 .expand-btn{background:none;border:none;cursor:pointer;font-size:.85rem;padding:2px 5px;border-radius:4px;transition:.15s;color:#1a2f55;line-height:1;display:inline-block}
 .expand-btn:hover{background:#e8eaf6}.expand-btn.open{transform:rotate(90deg)}
 .found-row-active td{background:#eef2ff!important}
-.found-det-area{display:none;background:#f4f6fb;border:1px solid #dde;border-radius:6px;margin-top:8px;padding:12px 16px}
-.found-det-area.open{display:block}
-.found-det-title{font-size:.82rem;font-weight:700;color:#1a2f55;margin-bottom:8px;padding-bottom:5px;border-bottom:2px solid #1a2f55}
-.det-inner{display:grid;grid-template-columns:1fr 1fr;gap:14px;font-size:.8rem}
-.det-inner h4{font-size:.76rem;font-weight:700;color:#1a2f55;margin-bottom:4px;padding-bottom:3px;border-bottom:1px solid #dde}
+.yr-detail td{padding:0!important;border-bottom:none;position:sticky;left:0;z-index:4;background:#f4f6fb}
+.det-box{padding:10px 14px;display:grid;grid-template-columns:1fr 1fr;gap:14px;font-size:.8rem}
+.det-box h4{font-size:.76rem;font-weight:700;color:#1a2f55;margin-bottom:4px;padding-bottom:3px;border-bottom:1px solid #dde}
 .det-row{display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px dotted #eaecf5}
 .det-lbl{color:#555;max-width:66%}.det-val{font-weight:600;white-space:nowrap}
 .det-total{font-weight:700;color:#1a2f55;border-top:1.5px solid #ccd!important;margin-top:2px}
-@media(max-width:600px){.det-inner{grid-template-columns:1fr}}
 .ann-label{font-size:.75rem;color:#888;font-style:italic;margin-top:8px}
 .legend{display:flex;gap:18px;flex-wrap:wrap;font-size:.8rem;color:#555;margin-bottom:12px}
 .legend-dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px}
@@ -326,13 +323,12 @@ tr:hover td:first-child{background:#fafbff}
   <div class="section">
     <h2>สรุปรายปี — มูลนิธิ (Historical Actuals)</h2>
     <div class="chart-wrap" style="height:340px"><canvas id="yearlyFoundChart"></canvas></div>
-    <div style="overflow-x:auto;margin-top:18px">
+    <div style="margin-top:18px">
     <table id="foundYearlyTable" style="min-width:520px">
       <thead><tr><th>Entity</th><th>ปี</th><th>รายรับ (฿)</th><th>รายจ่าย (฿)</th><th>Net (฿)</th><th>หมายเหตุ</th></tr></thead>
       <tbody id="foundYearlyTbody"></tbody>
     </table>
     </div>
-    <div id="foundDetArea" class="found-det-area"></div>
     <p class="ann-label" style="margin-top:8px">* ข้อมูลทั้งหมดจากงบการเงินตรวจสอบ (ASM Audit) | 2563: Disclaimer of Opinion — ตัวเลขมาจากคอลัมน์เปรียบเทียบในงบปี 2564</p>
   </div>
 
@@ -643,7 +639,7 @@ const foundData=[
    expBreak:[['เงินบริจาค (จ่ายออก)',2910748],['ค่าใช้จ่ายพิพิธภัณฑ์',103283],['ค่างานตกแต่งแกะสลัก',90000],['ค่าแปลเอกสาร',42800],['ค่าสอบบัญชีและวิชาชีพ',34000],['ค่าเสื่อมราคา+ค่าธนาคาร+ภาษี',1259]]}
 ];
 
-// Build yearly table — expand button per row, detail renders outside scroll container
+// Build yearly table with expandable sub-rows
 (function(){
   const tbody=document.getElementById('foundYearlyTbody');
   foundData.forEach((d,i)=>{
@@ -652,27 +648,23 @@ const foundData=[
     const netSign=d.net>=0?'+':'-';
     tr.innerHTML=`<td><button class="expand-btn" id="fbtn${i}" onclick="toggleFoundRow(${i})">&#9654;</button> <strong>${d.entity}</strong></td><td>${d.year}</td><td class="tpos">${fmt(d.rev)}</td><td class="tneg">${fmt(d.exp)}</td><td class="${d.net>=0?'tpos':'tneg'}">${netSign}${fmt(Math.abs(d.net))}</td><td style="font-size:.78rem;color:#888">${d.note}</td>`;
     tbody.appendChild(tr);
+    const dr=document.createElement('tr');
+    dr.className='yr-detail';dr.style.display='none';
+    const ri=d.revBreak.map(([l,v])=>`<div class="det-row"><span class="det-lbl">${l}</span><span class="det-val tpos">${fmt(v)}</span></div>`).join('');
+    const ei=d.expBreak.map(([l,v])=>`<div class="det-row"><span class="det-lbl">${l}</span><span class="det-val tneg">${fmt(v)}</span></div>`).join('');
+    dr.innerHTML=`<td colspan="6"><div class="det-box"><div><h4>รายรับแยกหมวด</h4>${ri}<div class="det-row det-total"><span class="det-lbl">รวมรายรับ</span><span class="det-val tpos">${fmt(d.rev)}</span></div></div><div><h4>รายจ่ายแยกหมวด</h4>${ei}<div class="det-row det-total"><span class="det-lbl">รวมรายจ่าย</span><span class="det-val tneg">${fmt(d.exp)}</span></div></div></div></td>`;
+    tbody.appendChild(dr);
   });
 })();
 
-let _openFoundRow=-1;
 function toggleFoundRow(i){
-  const area=document.getElementById('foundDetArea');
+  const rows=document.getElementById('foundYearlyTbody').querySelectorAll('tr.yr-detail');
+  const dr=rows[i];
   const btn=document.getElementById('fbtn'+i);
-  // Close previously open row
-  if(_openFoundRow>=0){
-    document.getElementById('frow'+_openFoundRow).classList.remove('found-row-active');
-    document.getElementById('fbtn'+_openFoundRow).classList.remove('open');
-  }
-  if(_openFoundRow===i){_openFoundRow=-1;area.classList.remove('open');return;}
-  _openFoundRow=i;
-  const d=foundData[i];
-  const ri=d.revBreak.map(([l,v])=>`<div class="det-row"><span class="det-lbl">${l}</span><span class="det-val tpos">${fmt(v)}</span></div>`).join('');
-  const ei=d.expBreak.map(([l,v])=>`<div class="det-row"><span class="det-lbl">${l}</span><span class="det-val tneg">${fmt(v)}</span></div>`).join('');
-  area.innerHTML=`<div class="found-det-title">${d.entity} ปี ${d.year}</div><div class="det-inner"><div><h4>รายรับแยกหมวด</h4>${ri}<div class="det-row det-total"><span class="det-lbl">รวมรายรับ</span><span class="det-val tpos">${fmt(d.rev)}</span></div></div><div><h4>รายจ่ายแยกหมวด</h4>${ei}<div class="det-row det-total"><span class="det-lbl">รวมรายจ่าย</span><span class="det-val tneg">${fmt(d.exp)}</span></div></div></div>`;
-  area.classList.add('open');
-  document.getElementById('frow'+i).classList.add('found-row-active');
-  btn.classList.add('open');
+  const open=dr.style.display!=='none';
+  dr.style.display=open?'none':'';
+  btn.classList.toggle('open',!open);
+  document.getElementById('frow'+i).classList.toggle('found-row-active',!open);
 }
 
 // ─── Yearly comparison charts — stacked breakdown ───
