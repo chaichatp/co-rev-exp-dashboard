@@ -36,13 +36,13 @@ header .sub{font-size:.85rem;opacity:.75;margin-top:4px}
 .tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
 table{width:100%;border-collapse:collapse;font-size:.85rem}
 th{background:#f0f2f5;color:#1a2f55;font-weight:700;padding:9px 12px;text-align:right;border-bottom:2px solid #dde}
-th:first-child{text-align:left}
+th:first-child{text-align:left;position:sticky;left:0;z-index:3;background:#f0f2f5;box-shadow:1px 0 0 rgba(0,0,0,.06)}
 th:nth-child(2){text-align:left;position:sticky;left:0;z-index:3;background:#f0f2f5;box-shadow:2px 0 4px rgba(0,0,0,.07)}
 td{padding:8px 12px;border-bottom:1px solid #f0f2f5;text-align:right}
-td:first-child{text-align:left}
+td:first-child{text-align:left;position:sticky;left:0;z-index:2;background:#fff;box-shadow:1px 0 0 rgba(0,0,0,.06)}
 td:nth-child(2){text-align:left;position:sticky;left:0;z-index:2;background:#fff;box-shadow:2px 0 4px rgba(0,0,0,.07)}
 tr:hover td{background:#fafbff}
-tr:hover td:nth-child(2){background:#fafbff}
+tr:hover td:first-child,tr:hover td:nth-child(2){background:#fafbff}
 .tpos{color:#27ae60;font-weight:600}.tneg{color:#e53935;font-weight:600}
 .expand-btn{background:none;border:none;cursor:pointer;font-size:.85rem;padding:2px 5px;border-radius:4px;transition:.15s;color:#1a2f55;line-height:1;display:inline-block}
 .expand-btn:hover{background:#e8eaf6}.expand-btn.open{transform:rotate(90deg)}
@@ -734,6 +734,17 @@ document.querySelectorAll('table').forEach(t=>{
 
 // Ensure hidden-tab charts resize correctly on load
 setTimeout(()=>window.dispatchEvent(new Event('resize')),100);
+
+// Set second-column sticky left offset = first column width (per table)
+function fixCol2Offset(){
+  document.querySelectorAll('table').forEach(t=>{
+    const th1=t.querySelector('th:first-child');
+    if(!th1) return;
+    const w=th1.offsetWidth;
+    t.querySelectorAll('th:nth-child(2),td:nth-child(2)').forEach(el=>el.style.left=w+'px');
+  });
+}
+setTimeout(fixCol2Offset,200);
 
 // ─── Chatbot ───
 const CHAT_API = 'https://nhomkai.multiam.com/chat';
