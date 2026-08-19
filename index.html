@@ -130,6 +130,7 @@ tr:hover td:first-child,tr:hover td:nth-child(2){background:#fafbff}
   <div class="tab" onclick="switchTab('mfsb')">มูลนิธิธรรมทานกุศลจิต</div>
   <div class="tab" onclick="switchTab('pof')">มูลนิธิปิลันธน์โอวาท</div>
   <div class="tab" onclick="switchTab('mam')">บจก.มัลติแอม</div>
+  <div class="tab" onclick="switchTab('chaiyut')">ค่าใช้จ่ายดร.ชัยยุทธ</div>
 </div>
 
 <!-- MFSB TAB -->
@@ -358,25 +359,33 @@ tr:hover td:first-child,tr:hover td:nth-child(2){background:#fafbff}
     <div class="chart-wrap"><canvas id="summaryCompare"></canvas></div>
   </div>
 
-  <div class="two-col">
-    <div class="section">
-      <h2>MFSB รายรับรายเดือน H1/2569</h2>
-      <div class="chart-wrap"><canvas id="sumIncomeBar"></canvas></div>
-    </div>
-    <div class="section">
-      <h2>ค่าใช้จ่ายดร.ชัยยุทธ ปิลันธน์โอวาท</h2>
-      <table>
-        <thead><tr><th>วันที่</th><th>รายการ</th><th>จำนวน (฿)</th></tr></thead>
-        <tbody>
-          <tr><td>25/11/2568</td><td>นมกลูเซอนา + นมอัลมอนด์ + เฟรซูบิน</td><td class="tneg">52,176</td></tr>
-          <tr><td>13/03/2569</td><td>ยาแผ่นแปะพากินสัน</td><td class="tneg">19,200</td></tr>
-          <tr><td>22/04/2569</td><td>เงินมัดจำผู้ป่วยใน รพ.กรุงเทพ</td><td class="tneg">300,000</td></tr>
-          <tr><td>22/04/2569</td><td>ค่ายา รพ.กรุงเทพ</td><td class="tneg">30,000</td></tr>
-          <tr><td>24/06/2569</td><td>ค่ายา</td><td class="tneg">49,350</td></tr>
-          <tr style="font-weight:700"><td colspan="2">รวมค่าใช้จ่ายทางการแพทย์</td><td class="tneg">450,726</td></tr>
-        </tbody>
-      </table>
-    </div>
+  <div class="section">
+    <h2>MFSB รายรับรายเดือน H1/2569</h2>
+    <div class="chart-wrap"><canvas id="sumIncomeBar"></canvas></div>
+  </div>
+</div>
+
+<!-- DR. CHAIYUT EXPENSES TAB -->
+<div id="tab-chaiyut" class="page">
+  <div class="cards">
+    <div class="card"><div class="label">รวมค่าใช้จ่ายทางการแพทย์</div><div class="value neg">฿450,726</div><div class="note">2568–2569 (5 รายการ)</div></div>
+    <div class="card"><div class="label">รายการล่าสุด</div><div class="value">24/06/2569</div><div class="note">ค่ายา ฿49,350</div></div>
+    <div class="card"><div class="label">รายการสูงสุด</div><div class="value neg">฿300,000</div><div class="note">เงินมัดจำผู้ป่วยใน รพ.กรุงเทพ</div></div>
+  </div>
+  <div class="section">
+    <h2>ค่าใช้จ่ายดร.ชัยยุทธ ปิลันธน์โอวาท</h2>
+    <table>
+      <thead><tr><th>วันที่</th><th>รายการ</th><th>จำนวน (฿)</th></tr></thead>
+      <tbody>
+        <tr><td>25/11/2568</td><td>นมกลูเซอนา + นมอัลมอนด์ + เฟรซูบิน</td><td class="tneg">52,176</td></tr>
+        <tr><td>13/03/2569</td><td>ยาแผ่นแปะพากินสัน</td><td class="tneg">19,200</td></tr>
+        <tr><td>22/04/2569</td><td>เงินมัดจำผู้ป่วยใน รพ.กรุงเทพ</td><td class="tneg">300,000</td></tr>
+        <tr><td>22/04/2569</td><td>ค่ายา รพ.กรุงเทพ</td><td class="tneg">30,000</td></tr>
+        <tr><td>24/06/2569</td><td>ค่ายา</td><td class="tneg">49,350</td></tr>
+        <tr style="font-weight:700"><td colspan="2">รวมค่าใช้จ่ายทางการแพทย์</td><td class="tneg">450,726</td></tr>
+      </tbody>
+    </table>
+    <p class="ann-label" style="margin-top:8px">* ค่าใช้จ่ายทางการแพทย์ส่วนตัวของดร.ชัยยุทธ ปิลันธน์โอวาท บันทึกแยกจากบัญชีมูลนิธิ</p>
   </div>
 </div>
 
@@ -425,7 +434,7 @@ tr:hover td:first-child,tr:hover td:nth-child(2){background:#fafbff}
 
 <script>
 function switchTab(name){
-  const tabKeys=['found-summary','corp-summary','mfsb','pof','mam'];
+  const tabKeys=['found-summary','corp-summary','mfsb','pof','mam','chaiyut'];
   document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',tabKeys[i]===name));
   document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id==='tab-'+name));
   setTimeout(()=>window.dispatchEvent(new Event('resize')),50);
