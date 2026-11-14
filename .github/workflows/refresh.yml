@@ -1,0 +1,35 @@
+name: Refresh 2569 data
+
+# Pulls the MFSB / POF RECORD sheets from Google Drive and republishes the
+# dashboard when the figures changed. Runs in GitHub's cloud, so it does not
+# depend on any PC being on.
+on:
+  schedule:
+    - cron: '0 12 * * 1-6'   # 19:00 Bangkok (UTC+7), Monday-Saturday
+  workflow_dispatch:          # "Run workflow" button for a manual refresh
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-data
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install openpyxl google-api-python-client google-auth
+
+      - name: Refresh from Google Drive and push if changed
+        env:
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+        run: python tools/refresh.py --ci
